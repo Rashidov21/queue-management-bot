@@ -1,17 +1,10 @@
-# Windows-compatible requirements (latest working versions)
-aiogram==3.22.0
-fastapi==0.116.1
-uvicorn==0.35.0
-sqlalchemy==1.3.24
-alembic==1.12.1
-apscheduler==3.11.0
-python-dotenv==1.1.1
-jinja2==3.1.6
-python-multipart==0.0.20
-aiosqlite==0.21.0
-pydantic==2.11.7
-pydantic-settings==2.11.0
-httpx==0.28.1
+# Django-based Queue Management Bot
+django>=5.0
+djangorestframework>=3.15
+django-cors-headers>=4.9
+python-dotenv>=1.1.1
+apscheduler>=3.11.0
+aiogram>=3.22.0
 
-# Note: Using SQLAlchemy 1.3.24 for Windows compatibility
-# This version doesn't require greenlet compilation
+# Optional async support
+asgiref>=3.8.1

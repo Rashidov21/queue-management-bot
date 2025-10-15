@@ -1,257 +1,246 @@
-# 🤖 Queue Management Bot
+# Queue Management Bot - Django Edition
 
-A modern, lightweight Telegram-based queue management system with a web admin dashboard. Built with Python, aiogram 3.x, FastAPI, SQLAlchemy, and APScheduler.
+A modern, stable Django-based queue management system with Telegram bot integration.
 
-## ✨ Features
+## 🚀 Features
 
-### 🧑‍💼 For Service Providers
-- **Easy Registration**: Quick setup with service type, location, and schedule
-- **Schedule Management**: Set working days, hours, and slot duration
-- **Booking Control**: Pause/resume accepting new bookings
-- **Real-time Notifications**: Get notified of new bookings and cancellations
-- **Booking Management**: View and manage all active bookings
+- **Django 5.x** backend with REST API
+- **SQLite** database (production-ready)
+- **Django Admin** panel for management
+- **Telegram Bot** integration
+- **Clean, async-ready** architecture
+- **Windows-compatible** (no compilation issues)
 
-### 👤 For Clients
-- **Service Discovery**: Browse available services and providers
-- **Smart Booking**: View only available time slots
-- **Instant Confirmation**: Get immediate booking confirmation
-- **Booking Management**: View and cancel your bookings
-- **Reminders**: Receive friendly appointment reminders
+## 📋 System Requirements
 
-### 🌐 For Admins
-- **Web Dashboard**: Clean, modern admin interface
-- **User Management**: View all users, providers, and clients
-- **Service Management**: Add and manage services
-- **Booking Overview**: Monitor all bookings and statistics
-- **Real-time Metrics**: Dashboard with key performance indicators
+- Python 3.8+
+- Django 5.x
+- SQLite (included with Python)
 
-## 🚀 Quick Start
+## 🛠️ Installation
 
-### Prerequisites
-- Python 3.11+
-- Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
-
-### Installation
-
-1. **Clone the repository**
+1. **Clone and setup:**
    ```bash
-   git clone <repository-url>
+   git clone <repository>
    cd queue-management-bot
-   ```
-
-2. **Install dependencies**
-   ```bash
    pip install -r requirements.txt
    ```
 
-3. **Configure environment**
+2. **Configure environment:**
    ```bash
+   # Copy example environment file
    cp env.example .env
-   # Edit .env with your bot token and settings
-   ```
-
-4. **Set up your bot token**
-   ```bash
-   # In your .env file:
+   
+   # Edit .env with your settings:
    BOT_TOKEN=your_telegram_bot_token_here
+   SECRET_KEY=your-django-secret-key
+   DEBUG=True
    ```
 
-5. **Initialize the database and seed data**
+3. **Run migrations:**
    ```bash
-   python -m database.seed
+   python manage.py migrate
    ```
 
-6. **Run the application**
+4. **Create sample data (optional):**
    ```bash
-   python run.py
+   python manage.py create_sample_data
    ```
 
-The bot will start in polling mode and the web admin dashboard will be available at `http://localhost:8000`.
+5. **Create admin user:**
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-## 📱 Usage
+## 🎯 Quick Start
 
-### For Service Providers
-
-1. **Start the bot**: Send `/start` to your bot
-2. **Register**: Choose "I'm a Service Provider"
-3. **Complete profile**: Enter name, select service, add location
-4. **Set schedule**: Choose working days and hours
-5. **Start accepting bookings**: Your profile is now live!
-
-### For Clients
-
-1. **Start the bot**: Send `/start` to your bot
-2. **Browse services**: Choose "I'm a Client"
-3. **Select service**: Pick from available services
-4. **Choose provider**: View available providers and locations
-5. **Book appointment**: Select date and time slot
-6. **Confirm booking**: Get instant confirmation!
-
-### For Admins
-
-1. **Access dashboard**: Go to `http://localhost:8000`
-2. **Login**: Use admin credentials (default: admin/admin123)
-3. **Manage system**: View users, services, and bookings
-4. **Monitor activity**: Check dashboard for real-time metrics
-
-## 🛠️ Configuration
-
-### Environment Variables
-
+### Start Django Server:
 ```bash
-# Bot Configuration
-BOT_TOKEN=your_telegram_bot_token_here
-WEBHOOK_URL=https://your-domain.com  # Optional for webhook mode
+python run_django.py
+```
+- Admin Panel: http://localhost:8001/admin/
+- API: http://localhost:8001/api/
+- Login: admin / admin123
 
-# Database Configuration
-DATABASE_URL=sqlite+aiosqlite:///./queue_bot.db  # SQLite for development
-# DATABASE_URL=postgresql+asyncpg://user:pass@localhost/db  # PostgreSQL for production
+### Start Telegram Bot:
+```bash
+python run_bot.py
+```
 
-# Web Configuration
-WEB_HOST=0.0.0.0
-WEB_PORT=8000
-SECRET_KEY=your-secret-key-change-in-production
+## 📊 API Endpoints
 
-# Admin Configuration
+### Public Endpoints:
+- `GET /api/services/` - List all services
+- `GET /api/providers/` - List all providers
+- `GET /api/providers/{id}/slots/?date=YYYY-MM-DD` - Available time slots
+
+### Authenticated Endpoints:
+- `GET /api/users/me/` - User profile
+- `GET /api/bookings/` - User's bookings
+- `POST /api/bookings/` - Create booking
+- `GET /api/notifications/` - User notifications
+- `GET /api/dashboard/stats/` - Dashboard statistics
+
+## 🤖 Telegram Bot Commands
+
+- `/start` - Main menu
+- `📋 View Services` - Browse available services
+- `📅 My Bookings` - View your bookings
+- `👤 Profile` - View your profile
+- `ℹ️ Help` - Show help information
+
+## 👥 User Roles
+
+### Clients:
+- Browse services and providers
+- Book appointments
+- View their bookings
+- Receive notifications
+
+### Service Providers:
+- Set working hours and days
+- View their bookings
+- Accept/reject appointments
+- Manage availability
+
+### Admins:
+- Manage users, services, and providers
+- View all bookings and statistics
+- Configure system settings
+
+## 🗄️ Database Models
+
+### User (Custom)
+- Extends Django's AbstractUser
+- Role: client/provider
+- Telegram integration
+
+### Service
+- Name, description, duration
+- Active/inactive status
+
+### Provider
+- Links to User and Service
+- Working days/hours
+- Location and availability
+
+### Booking
+- Client, provider, date, time
+- Status tracking
+- Notes and history
+
+### Notification
+- User notifications
+- Booking-related alerts
+- Read/unread status
+
+## 🔧 Configuration
+
+### Environment Variables:
+```env
+BOT_TOKEN=your_telegram_bot_token
+SECRET_KEY=your-django-secret-key
+DEBUG=True
+DATABASE_URL=sqlite:///db.sqlite3
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=admin123
-
-# Notification Configuration
-REMINDER_HOURS_BEFORE=1
 ```
 
-### Running Modes
+### Django Settings:
+- Custom User model
+- REST Framework configuration
+- CORS settings for API access
+- Admin panel customization
 
-```bash
-# Run both bot and web dashboard
-python run.py
+## 📱 Sample Data
 
-# Run only the Telegram bot
-python run.py bot
+The system includes sample data:
+- 4 services (Haircut, Hair Coloring, Manicure, Massage)
+- 4 providers with different schedules
+- 3 client accounts
+- Sample bookings
 
-# Run only the web dashboard
-python run.py web
+**Sample Accounts:**
+- Providers: john_barber, sarah_stylist, mike_nailtech, lisa_therapist
+- Clients: client1, client2, client3
+- Password for all: `password123`
 
-# Show help
-python run.py help
-```
+## 🚀 Production Deployment
 
-## 🏗️ Project Structure
-
-```
-queue-management-bot/
-├── bot/                    # Telegram bot code
-│   ├── handlers/          # Bot message handlers
-│   ├── keyboards/         # Inline keyboards
-│   ├── states/           # FSM states
-│   ├── utils/            # Helper functions
-│   └── main.py           # Bot main file
-├── web/                   # Web admin dashboard
-│   ├── routes/           # FastAPI routes
-│   └── main.py           # Web app main file
-├── database/              # Database code
-│   ├── models.py         # SQLAlchemy models
-│   ├── db.py             # Database connection
-│   └── seed.py           # Initial data seeding
-├── config.py             # Configuration settings
-├── scheduler.py          # Notification scheduler
-├── run.py                # Main application runner
-└── requirements.txt      # Python dependencies
-```
-
-## 🔧 Technical Details
-
-### Database Models
-- **User**: Basic user information (telegram_id, name, role)
-- **Service**: Available services (haircut, massage, etc.)
-- **Provider**: Service provider profiles and settings
-- **Slot**: Time slots for appointments
-- **Booking**: Client bookings and status
-
-### Key Features
-- **Async/Await**: Full async support for better performance
-- **State Management**: FSM for handling user flows
-- **Scheduled Tasks**: APScheduler for reminders and cleanup
-- **Responsive UI**: Clean, emoji-enhanced interface
-- **Error Handling**: Graceful error handling throughout
-
-### Notifications
-- **Booking Confirmations**: Instant notifications to both parties
-- **Appointment Reminders**: 1-hour advance reminders
-- **Status Updates**: Real-time booking status changes
-- **Admin Alerts**: System notifications for admins
-
-## 🚀 Deployment
-
-### Local Development
-```bash
-python run.py
-```
-
-### Production Deployment
-
-1. **Use PostgreSQL**:
-   ```bash
-   DATABASE_URL=postgresql+asyncpg://user:pass@localhost/db
+1. **Set production settings:**
+   ```python
+   DEBUG = False
+   ALLOWED_HOSTS = ['yourdomain.com']
+   SECRET_KEY = 'your-production-secret-key'
    ```
 
-2. **Set up webhook** (optional):
-   ```bash
-   WEBHOOK_URL=https://your-domain.com
+2. **Use PostgreSQL (recommended):**
+   ```python
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql',
+           'NAME': 'queue_management',
+           'USER': 'your_user',
+           'PASSWORD': 'your_password',
+           'HOST': 'localhost',
+           'PORT': '5432',
+       }
+   }
    ```
 
-3. **Use a process manager** like PM2 or systemd
-4. **Set up reverse proxy** with Nginx
-5. **Configure SSL** for HTTPS
+3. **Set up webhook for bot:**
+   ```python
+   WEBHOOK_URL = 'https://yourdomain.com/webhook/'
+   ```
 
-### Docker Deployment (Optional)
+## 🔍 Troubleshooting
 
-```dockerfile
-FROM python:3.11-slim
+### Common Issues:
 
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+1. **Bot not responding:**
+   - Check BOT_TOKEN in .env
+   - Ensure Django server is running
+   - Check bot permissions
 
-COPY . .
-CMD ["python", "run.py"]
-```
+2. **Database errors:**
+   - Run migrations: `python manage.py migrate`
+   - Check database permissions
 
-## 🔐 Security Notes
+3. **API not working:**
+   - Check Django server status
+   - Verify API endpoints in browser
+   - Check CORS settings
 
-- Change default admin credentials in production
-- Use strong SECRET_KEY for sessions
-- Enable HTTPS for web dashboard
-- Regularly update dependencies
-- Monitor bot usage and logs
+## 📈 Future Enhancements
+
+- [ ] Real-time notifications via WebSockets
+- [ ] Payment integration
+- [ ] Advanced scheduling (recurring appointments)
+- [ ] Multi-language support
+- [ ] Mobile app integration
+- [ ] Analytics dashboard
+- [ ] Email notifications
+- [ ] Calendar integration
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests if applicable
+4. Add tests
 5. Submit a pull request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License - see LICENSE file for details.
 
 ## 🆘 Support
 
-- **Issues**: Report bugs via GitHub issues
-- **Documentation**: Check this README and code comments
-- **Community**: Join our discussion forums
-
-## 🎯 Roadmap
-
-- [ ] Multi-language support
-- [ ] Advanced scheduling features
-- [ ] Payment integration
-- [ ] Mobile app companion
-- [ ] Analytics dashboard
-- [ ] API for third-party integrations
+For support and questions:
+- Create an issue on GitHub
+- Check the troubleshooting section
+- Review Django and aiogram documentation
 
 ---
 
-**Built with ❤️ using Python, aiogram, FastAPI, and modern web technologies.**
+**Built with ❤️ using Django 5.x and aiogram 3.x**
