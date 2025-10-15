@@ -77,5 +77,8 @@ if __name__ == "__main__":
         "web.main:app",
         host=settings.WEB_HOST,
         port=settings.WEB_PORT,
-        reload=True
+        reload=True,
+        # Use standard HTTP server instead of httptools
+        server_header=False,
+        date_header=False
     )

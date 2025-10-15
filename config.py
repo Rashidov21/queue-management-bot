@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     WEBHOOK_URL: Optional[str] = None
     WEBHOOK_PATH: str = "/webhook"
     
-    # Database Configuration
+    # Database Configuration (SQLite for Windows compatibility)
     DATABASE_URL: str = "sqlite+aiosqlite:///./queue_bot.db"
     
     # Web Configuration

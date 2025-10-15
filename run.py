@@ -43,7 +43,10 @@ def run_web():
             host=settings.WEB_HOST,
             port=settings.WEB_PORT,
             reload=False,
-            log_level="info"
+            log_level="info",
+            # Use standard HTTP server instead of httptools
+            server_header=False,
+            date_header=False
         )
     except KeyboardInterrupt:
         logger.info("🛑 Web server stopped by user")
