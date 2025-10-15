@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from database.models import User
-from database.db import get_db
+from database.db import async_session_maker
 from bot.states.user_states import RoleSelection, ProviderRegistration, ClientBooking
 from bot.keyboards.main import get_main_menu_keyboard, get_services_keyboard, get_provider_menu_keyboard, get_client_menu_keyboard
 from bot.utils.helpers import get_today_str
@@ -20,7 +20,7 @@ async def cmd_start(message: Message, state: FSMContext):
     await state.clear()
     
     # Check if user already exists
-    async with get_db() as db:
+    async with async_session_maker() as db:
         result = await db.execute(select(User).where(User.telegram_id == message.from_user.id))
         user = result.scalar_one_or_none()
     
@@ -73,7 +73,7 @@ async def show_services_menu(message: Message):
     """Show available services menu"""
     from database.models import Service
     
-    async with get_db() as db:
+    async with async_session_maker() as db:
         result = await db.execute(select(Service))
         services = result.scalars().all()
     
@@ -93,7 +93,7 @@ async def cmd_menu(message: Message, state: FSMContext):
     """Show main menu"""
     await state.clear()
     
-    async with get_db() as db:
+    async with async_session_maker() as db:
         result = await db.execute(select(User).where(User.telegram_id == message.from_user.id))
         user = result.scalar_one_or_none()
     

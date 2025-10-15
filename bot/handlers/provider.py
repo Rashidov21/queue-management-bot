@@ -6,7 +6,7 @@ from sqlalchemy import select, update
 from datetime import datetime, time
 
 from database.models import User, Provider, Service, Booking, Slot
-from database.db import get_db
+from database.db import async_session_maker
 from bot.states.user_states import ProviderRegistration, ProviderSchedule
 from bot.keyboards.main import (
     get_services_keyboard, get_working_days_keyboard, get_provider_menu_keyboard,
@@ -30,7 +30,7 @@ async def process_provider_name(message: Message, state: FSMContext):
     await state.update_data(full_name=message.text)
     
     # Show services selection
-    async with get_db() as db:
+    async with async_session_maker() as db:
         result = await db.execute(select(Service))
         services = result.scalars().all()
     
@@ -194,7 +194,7 @@ async def process_slot_duration(message: Message, state: FSMContext):
     data = await state.get_data()
     
     # Create user and provider records
-    async with get_db() as db:
+    async with async_session_maker() as db:
         # Create user
         user = User(
             telegram_id=message.from_user.id,
@@ -230,7 +230,7 @@ async def process_slot_duration(message: Message, state: FSMContext):
 @router.message(F.text == "📋 My Bookings")
 async def show_provider_bookings(message: Message):
     """Show provider's bookings"""
-    async with get_db() as db:
+    async with async_session_maker() as db:
         # Get provider
         result = await db.execute(
             select(Provider).where(Provider.user_id == 
@@ -276,7 +276,7 @@ async def show_provider_bookings(message: Message):
 @router.message(F.text == "📅 Manage Schedule")
 async def manage_schedule(message: Message):
     """Show schedule management options"""
-    async with get_db() as db:
+    async with async_session_maker() as db:
         result = await db.execute(
             select(Provider).where(Provider.user_id == 
                 select(User.id).where(User.telegram_id == message.from_user.id)
@@ -309,7 +309,7 @@ async def manage_schedule(message: Message):
 @router.callback_query(F.data == "pause_bookings")
 async def pause_bookings(callback: CallbackQuery):
     """Pause accepting new bookings"""
-    async with get_db() as db:
+    async with async_session_maker() as db:
         await db.execute(
             update(Provider)
             .where(Provider.user_id == 
@@ -330,7 +330,7 @@ async def pause_bookings(callback: CallbackQuery):
 @router.callback_query(F.data == "resume_bookings")
 async def resume_bookings(callback: CallbackQuery):
     """Resume accepting new bookings"""
-    async with get_db() as db:
+    async with async_session_maker() as db:
         await db.execute(
             update(Provider)
             .where(Provider.user_id == 
@@ -351,7 +351,7 @@ async def resume_bookings(callback: CallbackQuery):
 @router.message(F.text == "📊 Dashboard")
 async def show_dashboard(message: Message):
     """Show provider dashboard"""
-    async with get_db() as db:
+    async with async_session_maker() as db:
         # Get provider
         result = await db.execute(
             select(Provider).where(Provider.user_id == 
