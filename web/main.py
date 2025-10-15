@@ -6,8 +6,8 @@ from contextlib import asynccontextmanager
 import os
 
 from web.routes.admin import router as admin_router
-from database.db import init_db
-from config import settings
+from database.simple_db import init_db
+from simple_config import settings
 
 
 @asynccontextmanager

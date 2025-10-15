@@ -5,9 +5,9 @@ from sqlalchemy import select, func, and_
 from datetime import datetime, timedelta
 from typing import Optional
 
-from database.db import async_session_maker
-from database.models import User, Provider, Service, Booking, Slot
-from config import settings
+from database.simple_db import SessionLocal
+from database.simple_db import User, Provider, Service, Booking, Slot
+from simple_config import settings
 
 router = APIRouter()
 
