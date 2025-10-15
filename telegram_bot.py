@@ -106,34 +106,34 @@ async def cmd_start(message: types.Message, state: FSMContext):
     
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="📋 View Services"), KeyboardButton(text="📅 My Bookings")],
-            [KeyboardButton(text="👤 Profile"), KeyboardButton(text="ℹ️ Help")]
+            [KeyboardButton(text="📋 Xizmatlar"), KeyboardButton(text="📅 Mening buyurtmalarim")],
+            [KeyboardButton(text="👤 Profil"), KeyboardButton(text="ℹ️ Yordam")]
         ],
         resize_keyboard=True,
         one_time_keyboard=False
     )
     
     await message.answer(
-        f"👋 Hello {message.from_user.first_name}!\n\n"
-        f"Welcome to the Queue Management Bot! 🚀\n\n"
-        f"Choose an option from the menu below:",
+        f"👋 Salom {message.from_user.first_name}!\n\n"
+        f"Navbatni boshqarish botiga xush kelibsiz! 🚀\n\n"
+        f"Quyidagi menyudan biror variantni tanlang:",
         reply_markup=keyboard
     )
 
 
-@dp.message(lambda message: message.text == "📋 View Services")
+@dp.message(lambda message: message.text == "📋 Xizmatlar")
 async def show_services(message: types.Message, state: FSMContext):
     """Show available services"""
     services_data = await make_api_request('GET', '/services/')
     
     if 'error' in services_data:
-        await message.answer("❌ Sorry, I couldn't fetch services right now. Please try again later.")
+        await message.answer("❌ Kechirasiz, hozircha xizmatlarni olishga qiynalmoqda. Keyinroq urinib ko'ring.")
         return
     
     services = services_data.get('results', [])
     
     if not services:
-        await message.answer("📋 No services available at the moment.")
+        await message.answer("📋 Hozircha hech qanday xizmat mavjud emas.")
         return
     
     keyboard = []
@@ -146,8 +146,8 @@ async def show_services(message: types.Message, state: FSMContext):
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
     
     await message.answer(
-        "📋 Available Services:\n\n" + 
-        "\n".join([f"• {s['name']} - {s['duration_minutes']} minutes" for s in services]),
+        "📋 Mavjud xizmatlar:\n\n" + 
+        "\n".join([f"• {s['name']} - {s['duration_minutes']} daqiqa" for s in services]),
         reply_markup=reply_markup
     )
 
@@ -164,13 +164,13 @@ async def process_service_selection(callback_query: types.CallbackQuery, state: 
     providers_data = await make_api_request('GET', f'/providers/?service_id={service_id}')
     
     if 'error' in providers_data:
-        await callback_query.message.edit_text("❌ Sorry, couldn't fetch providers. Please try again.")
+        await callback_query.message.edit_text("❌ Kechirasiz, xizmat ko'rsatuvchilarni olishga qiynalmoqda. Qayta urinib ko'ring.")
         return
     
     providers = providers_data.get('results', [])
     
     if not providers:
-        await callback_query.message.edit_text("❌ No providers available for this service.")
+        await callback_query.message.edit_text("❌ Bu xizmat uchun hech qanday ko'rsatuvchi mavjud emas.")
         return
     
     keyboard = []
@@ -183,7 +183,7 @@ async def process_service_selection(callback_query: types.CallbackQuery, state: 
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
     
     await callback_query.message.edit_text(
-        f"👨‍💼 Choose a provider:\n\n" +
+        f"👨‍💼 Xizmat ko'rsatuvchini tanlang:\n\n" +
         "\n".join([f"• {p['user_name']} - {p['location']}" for p in providers]),
         reply_markup=reply_markup
     )
@@ -201,25 +201,25 @@ async def process_provider_selection(callback_query: types.CallbackQuery, state:
     provider_data = await make_api_request('GET', f'/providers/{provider_id}/')
     
     if 'error' in provider_data:
-        await callback_query.message.edit_text("❌ Provider not found.")
+        await callback_query.message.edit_text("❌ Xizmat ko'rsatuvchi topilmadi.")
         return
     
     working_days = ", ".join([day.capitalize() for day in provider_data['working_days']])
     
     keyboard = [
-        [InlineKeyboardButton(text="Today", callback_data="date_today")],
-        [InlineKeyboardButton(text="Tomorrow", callback_data="date_tomorrow")],
-        [InlineKeyboardButton(text="Day After Tomorrow", callback_data="date_day_after")]
+        [InlineKeyboardButton(text="Bugun", callback_data="date_today")],
+        [InlineKeyboardButton(text="Ertaga", callback_data="date_tomorrow")],
+        [InlineKeyboardButton(text="Kundan keyingi kun", callback_data="date_day_after")]
     ]
     
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
     
     await callback_query.message.edit_text(
-        f"📅 Choose a date for your booking:\n\n"
-        f"Provider: {provider_data['user_name']}\n"
-        f"Service: {provider_data['service_name']}\n"
-        f"Working days: {working_days}\n"
-        f"Hours: {provider_data['start_time']} - {provider_data['end_time']}",
+        f"📅 Buyurtmangiz uchun sanani tanlang:\n\n"
+        f"Ko'rsatuvchi: {provider_data['user_name']}\n"
+        f"Xizmat: {provider_data['service_name']}\n"
+        f"Ish kunlari: {working_days}\n"
+        f"Vaqt: {provider_data['start_time']} - {provider_data['end_time']}",
         reply_markup=reply_markup
     )
 
@@ -237,7 +237,7 @@ async def process_date_selection(callback_query: types.CallbackQuery, state: FSM
     elif date_option == "day_after":
         selected_date = today + timedelta(days=2)
     else:
-        await callback_query.message.edit_text("❌ Invalid date selection.")
+        await callback_query.message.edit_text("❌ Noto'g'ri sana tanlovi.")
         return
     
     data = await state.get_data()
@@ -253,13 +253,13 @@ async def process_date_selection(callback_query: types.CallbackQuery, state: FSM
     )
     
     if 'error' in slots_data:
-        await callback_query.message.edit_text("❌ Couldn't fetch available time slots.")
+        await callback_query.message.edit_text("❌ Mavjud vaqt bo'shliqlarini olishga qiynalmoqda.")
         return
     
     slots = slots_data if isinstance(slots_data, list) else []
     
     if not slots:
-        await callback_query.message.edit_text("❌ No available time slots for this date.")
+        await callback_query.message.edit_text("❌ Bu sana uchun hech qanday bo'sh vaqt yo'q.")
         return
     
     keyboard = []
@@ -273,8 +273,8 @@ async def process_date_selection(callback_query: types.CallbackQuery, state: FSM
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
     
     await callback_query.message.edit_text(
-        f"🕐 Available time slots for {selected_date}:\n\n"
-        f"Choose a time slot:",
+        f"🕐 {selected_date} uchun mavjud vaqt bo'shliqlari:\n\n"
+        f"Vaqt bo'shligini tanlang:",
         reply_markup=reply_markup
     )
 
@@ -290,17 +290,17 @@ async def process_time_selection(callback_query: types.CallbackQuery, state: FSM
     data = await state.get_data()
     
     keyboard = [
-        [InlineKeyboardButton(text="✅ Confirm Booking", callback_data="confirm_booking")],
-        [InlineKeyboardButton(text="❌ Cancel", callback_data="cancel_booking")]
+        [InlineKeyboardButton(text="✅ Buyurtmani tasdiqlash", callback_data="confirm_booking")],
+        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_booking")]
     ]
     
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
     
     await callback_query.message.edit_text(
-        f"📋 Please confirm your booking:\n\n"
-        f"Date: {data['date']}\n"
-        f"Time: {time_str}\n\n"
-        f"Do you want to confirm this booking?",
+        f"📋 Iltimos, buyurtmangizni tasdiqlang:\n\n"
+        f"Sana: {data['date']}\n"
+        f"Vaqt: {time_str}\n\n"
+        f"Bu buyurtmani tasdiqlashni xohlaysizmi?",
         reply_markup=reply_markup
     )
 
@@ -321,11 +321,11 @@ async def confirm_booking(callback_query: types.CallbackQuery, state: FSMContext
     # For MVP, we'll simulate a successful booking
     # In production, you'd implement proper authentication
     await callback_query.message.edit_text(
-        f"✅ Booking confirmed!\n\n"
-        f"Date: {data['date']}\n"
-        f"Time: {data['time']}\n\n"
-        f"You will receive a reminder before your appointment.\n\n"
-        f"Use /start to return to the main menu."
+        f"✅ Buyurtma tasdiqlandi!\n\n"
+        f"Sana: {data['date']}\n"
+        f"Vaqt: {data['time']}\n\n"
+        f"Uchrashuvdan oldin eslatma olasiz.\n\n"
+        f"Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."
     )
     
     await state.clear()
@@ -335,50 +335,50 @@ async def confirm_booking(callback_query: types.CallbackQuery, state: FSMContext
 async def cancel_booking(callback_query: types.CallbackQuery, state: FSMContext):
     """Cancel booking process"""
     await callback_query.message.edit_text(
-        "❌ Booking cancelled.\n\nUse /start to return to the main menu."
+        "❌ Buyurtma bekor qilindi.\n\nAsosiy menyuga qaytish uchun /start buyrug'ini ishlating."
     )
     await state.clear()
 
 
-@dp.message(lambda message: message.text == "📅 My Bookings")
+@dp.message(lambda message: message.text == "📅 Mening buyurtmalarim")
 async def show_my_bookings(message: types.Message):
     """Show user's bookings"""
     # For MVP, show a placeholder
     await message.answer(
-        "📅 Your Bookings:\n\n"
-        "No bookings found.\n\n"
-        "Use 'View Services' to make a new booking!"
+        "📅 Sizning buyurtmalaringiz:\n\n"
+        "Hech qanday buyurtma topilmadi.\n\n"
+        "Yangi buyurtma berish uchun 'Xizmatlar'ni ishlating!"
     )
 
 
-@dp.message(lambda message: message.text == "👤 Profile")
+@dp.message(lambda message: message.text == "👤 Profil")
 async def show_profile(message: types.Message):
     """Show user profile"""
     await message.answer(
-        f"👤 Your Profile:\n\n"
-        f"Name: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
-        f"Username: @{message.from_user.username or 'Not set'}\n"
+        f"👤 Sizning profilingiz:\n\n"
+        f"Ism: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
+        f"Foydalanuvchi nomi: @{message.from_user.username or 'Belgilanmagan'}\n"
         f"Telegram ID: {message.from_user.id}\n"
-        f"Role: Client\n\n"
-        f"Use /start to return to the main menu."
+        f"Rol: Mijoz\n\n"
+        f"Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."
     )
 
 
-@dp.message(lambda message: message.text == "ℹ️ Help")
+@dp.message(lambda message: message.text == "ℹ️ Yordam")
 async def show_help(message: types.Message):
     """Show help information"""
     await message.answer(
-        "ℹ️ Help & Information:\n\n"
-        "🤖 This bot helps you book services with providers.\n\n"
-        "📋 **Available Commands:**\n"
-        "• /start - Main menu\n"
-        "• View Services - Browse available services\n"
-        "• My Bookings - View your bookings\n"
-        "• Profile - View your profile\n"
-        "• Help - Show this help\n\n"
-        "📞 **Support:**\n"
-        "If you need help, contact the administrator.\n\n"
-        "Use /start to return to the main menu."
+        "ℹ️ Yordam va ma'lumot:\n\n"
+        "🤖 Bu bot sizga xizmat ko'rsatuvchilar bilan xizmatlarni buyurtma qilishga yordam beradi.\n\n"
+        "📋 **Mavjud buyruqlar:**\n"
+        "• /start - Asosiy menyu\n"
+        "• Xizmatlar - Mavjud xizmatlarni ko'rish\n"
+        "• Mening buyurtmalarim - Buyurtmalaringizni ko'rish\n"
+        "• Profil - Profilingizni ko'rish\n"
+        "• Yordam - Bu yordamni ko'rsatish\n\n"
+        "📞 **Qo'llab-quvvatlash:**\n"
+        "Agar yordamga muhtoj bo'lsangiz, administratorga murojaat qiling.\n\n"
+        "Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."
     )
 
 
@@ -386,14 +386,14 @@ async def show_help(message: types.Message):
 async def handle_unknown_message(message: types.Message):
     """Handle unknown messages"""
     await message.answer(
-        "❓ I don't understand that command.\n\n"
-        "Use /start to see the main menu or /help for assistance."
+        "❓ Men bu buyruqni tushunmayman.\n\n"
+        "Asosiy menyuni ko'rish uchun /start yoki yordam uchun /help buyrug'ini ishlating."
     )
 
 
 async def main():
     """Main function to start the bot"""
-    logger.info("Starting Telegram bot...")
+    logger.info("Telegram bot ishga tushmoqda...")
     
     # Delete webhook if it exists
     await bot.delete_webhook(drop_pending_updates=True)
@@ -406,7 +406,7 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        logger.info("Bot stopped by user")
+        logger.info("Bot foydalanuvchi tomonidan to'xtatildi")
     except Exception as e:
-        logger.error(f"Bot error: {e}")
+        logger.error(f"Bot xatosi: {e}")
         sys.exit(1)

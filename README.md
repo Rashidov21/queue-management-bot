@@ -19,14 +19,36 @@ A modern, stable Django-based queue management system with Telegram bot integrat
 
 ## 🛠️ Installation
 
+### Quick Setup (Recommended):
+```bash
+git clone <repository>
+cd queue-management-bot
+python setup.py
+```
+
+### Manual Setup:
 1. **Clone and setup:**
    ```bash
    git clone <repository>
    cd queue-management-bot
+   python -m venv venv
+   ```
+
+2. **Activate virtual environment:**
+   ```bash
+   # Windows
+   venv\Scripts\activate
+   
+   # Linux/Mac
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+   ```bash
    pip install -r requirements.txt
    ```
 
-2. **Configure environment:**
+4. **Configure environment:**
    ```bash
    # Copy example environment file
    cp env.example .env
@@ -37,22 +59,31 @@ A modern, stable Django-based queue management system with Telegram bot integrat
    DEBUG=True
    ```
 
-3. **Run migrations:**
+5. **Run migrations:**
    ```bash
    python manage.py migrate
    ```
 
-4. **Create sample data (optional):**
-   ```bash
-   python manage.py create_sample_data
-   ```
-
-5. **Create admin user:**
+6. **Create admin user:**
    ```bash
    python manage.py createsuperuser
    ```
 
+7. **Create sample data (optional):**
+   ```bash
+   python manage.py create_sample_data
+   ```
+
 ## 🎯 Quick Start
+
+### Activate Virtual Environment:
+```bash
+# Windows
+venv\Scripts\activate
+
+# Linux/Mac
+source venv/bin/activate
+```
 
 ### Start Django Server:
 ```bash

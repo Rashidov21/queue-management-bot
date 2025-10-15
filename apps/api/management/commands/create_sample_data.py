@@ -17,23 +17,23 @@ class Command(BaseCommand):
         # Create services
         services_data = [
             {
-                'name': 'Haircut',
-                'description': 'Professional haircut service',
+                'name': 'Soch olish',
+                'description': 'Professional soch olish xizmati',
                 'duration_minutes': 30
             },
             {
-                'name': 'Hair Coloring',
-                'description': 'Hair coloring and styling',
+                'name': 'Soch bo\'yash',
+                'description': 'Soch bo\'yash va stillash xizmati',
                 'duration_minutes': 60
             },
             {
-                'name': 'Manicure',
-                'description': 'Nail care and manicure service',
+                'name': 'Manikyur',
+                'description': 'Tirnoq parvarishi va manikyur xizmati',
                 'duration_minutes': 45
             },
             {
-                'name': 'Massage',
-                'description': 'Relaxing massage therapy',
+                'name': 'Massaj',
+                'description': 'Dam olish massaji terapiyasi',
                 'duration_minutes': 60
             }
         ]
@@ -51,60 +51,60 @@ class Command(BaseCommand):
         # Create users and providers
         providers_data = [
             {
-                'username': 'john_barber',
-                'email': 'john@example.com',
-                'first_name': 'John',
-                'last_name': 'Smith',
+                'username': 'ahmad_sartarosh',
+                'email': 'ahmad@example.com',
+                'first_name': 'Ahmad',
+                'last_name': 'Karimov',
                 'role': 'provider',
-                'phone': '+1234567890',
-                'service': services[0],  # Haircut
+                'phone': '+998901234567',
+                'service': services[0],  # Soch olish
                 'working_days': ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
                 'start_time': time(9, 0),
                 'end_time': time(17, 0),
-                'location': 'Downtown Salon',
-                'description': 'Professional barber with 10 years experience'
+                'location': 'Markaziy salon',
+                'description': '10 yillik tajribaga ega professional sartarosh'
             },
             {
-                'username': 'sarah_stylist',
-                'email': 'sarah@example.com',
-                'first_name': 'Sarah',
-                'last_name': 'Johnson',
+                'username': 'zebo_stilist',
+                'email': 'zebo@example.com',
+                'first_name': 'Zebo',
+                'last_name': 'Toshmatova',
                 'role': 'provider',
-                'phone': '+1234567891',
-                'service': services[1],  # Hair Coloring
+                'phone': '+998901234568',
+                'service': services[1],  # Soch bo'yash
                 'working_days': ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
                 'start_time': time(10, 0),
                 'end_time': time(18, 0),
-                'location': 'Beauty Studio',
-                'description': 'Expert hair colorist and stylist'
+                'location': 'Go\'zallik studiyasi',
+                'description': 'Soch bo\'yash va stillash bo\'yicha ekspert'
             },
             {
-                'username': 'mike_nailtech',
-                'email': 'mike@example.com',
-                'first_name': 'Mike',
-                'last_name': 'Davis',
+                'username': 'dilnoza_manikyurchi',
+                'email': 'dilnoza@example.com',
+                'first_name': 'Dilnoza',
+                'last_name': 'Umarova',
                 'role': 'provider',
-                'phone': '+1234567892',
-                'service': services[2],  # Manicure
+                'phone': '+998901234569',
+                'service': services[2],  # Manikyur
                 'working_days': ['tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
                 'start_time': time(9, 30),
                 'end_time': time(17, 30),
-                'location': 'Nail Studio',
-                'description': 'Professional nail technician'
+                'location': 'Tirnoq studiyasi',
+                'description': 'Professional tirnoq texnigi'
             },
             {
-                'username': 'lisa_therapist',
-                'email': 'lisa@example.com',
-                'first_name': 'Lisa',
-                'last_name': 'Wilson',
+                'username': 'mariya_massajchi',
+                'email': 'mariya@example.com',
+                'first_name': 'Mariya',
+                'last_name': 'Petrova',
                 'role': 'provider',
-                'phone': '+1234567893',
-                'service': services[3],  # Massage
+                'phone': '+998901234570',
+                'service': services[3],  # Massaj
                 'working_days': ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
                 'start_time': time(8, 0),
                 'end_time': time(16, 0),
-                'location': 'Wellness Center',
-                'description': 'Licensed massage therapist'
+                'location': 'Salomatlik markazi',
+                'description': 'Litsenziyalangan massaj terapevti'
             }
         ]
         
@@ -147,28 +147,28 @@ class Command(BaseCommand):
         # Create client users
         clients_data = [
             {
-                'username': 'client1',
-                'email': 'client1@example.com',
-                'first_name': 'Alice',
-                'last_name': 'Brown',
+                'username': 'mijoz1',
+                'email': 'mijoz1@example.com',
+                'first_name': 'Malika',
+                'last_name': 'Karimova',
                 'role': 'client',
-                'phone': '+1234567894'
+                'phone': '+998901234571'
             },
             {
-                'username': 'client2',
-                'email': 'client2@example.com',
-                'first_name': 'Bob',
-                'last_name': 'Green',
+                'username': 'mijoz2',
+                'email': 'mijoz2@example.com',
+                'first_name': 'Bobur',
+                'last_name': 'Nazarov',
                 'role': 'client',
-                'phone': '+1234567895'
+                'phone': '+998901234572'
             },
             {
-                'username': 'client3',
-                'email': 'client3@example.com',
-                'first_name': 'Carol',
-                'last_name': 'White',
+                'username': 'mijoz3',
+                'email': 'mijoz3@example.com',
+                'first_name': 'Sevara',
+                'last_name': 'Toshmatova',
                 'role': 'client',
-                'phone': '+1234567896'
+                'phone': '+998901234573'
             }
         ]
         
@@ -195,7 +195,7 @@ class Command(BaseCommand):
                 'date': today + timedelta(days=1),
                 'time': time(10, 0),
                 'status': 'confirmed',
-                'notes': 'Regular haircut'
+                'notes': 'Oddiy soch olish'
             },
             {
                 'client': clients[1],
@@ -203,7 +203,7 @@ class Command(BaseCommand):
                 'date': today + timedelta(days=2),
                 'time': time(14, 0),
                 'status': 'pending',
-                'notes': 'Hair coloring - blonde highlights'
+                'notes': 'Soch bo\'yash - oltin rang'
             },
             {
                 'client': clients[2],
@@ -211,7 +211,7 @@ class Command(BaseCommand):
                 'date': today + timedelta(days=3),
                 'time': time(11, 0),
                 'status': 'confirmed',
-                'notes': 'French manicure'
+                'notes': 'Fransuz manikyuri'
             },
             {
                 'client': clients[0],
@@ -219,7 +219,7 @@ class Command(BaseCommand):
                 'date': today + timedelta(days=4),
                 'time': time(9, 0),
                 'status': 'pending',
-                'notes': 'Deep tissue massage'
+                'notes': 'Chuqur massaj'
             }
         ]
         
@@ -239,14 +239,14 @@ class Command(BaseCommand):
                 self.stdout.write(f'Created booking: {booking}')
         
         self.stdout.write(
-            self.style.SUCCESS('Successfully created sample data!')
+            self.style.SUCCESS('Namuna ma\'lumotlar muvaffaqiyatli yaratildi!')
         )
-        self.stdout.write('\nSample accounts created:')
-        self.stdout.write('Providers (username / password):')
+        self.stdout.write('\nYaratilgan hisoblar:')
+        self.stdout.write('Xizmat ko\'rsatuvchilar (foydalanuvchi nomi / parol):')
         for provider in providers:
             self.stdout.write(f'  {provider.user.username} / password123')
-        self.stdout.write('\nClients (username / password):')
+        self.stdout.write('\nMijozlar (foydalanuvchi nomi / parol):')
         for client in clients:
             self.stdout.write(f'  {client.username} / password123')
-        self.stdout.write('\nAdmin access: /admin/')
-        self.stdout.write('API access: /api/')
+        self.stdout.write('\nAdmin kirish: /admin/')
+        self.stdout.write('API kirish: /api/')

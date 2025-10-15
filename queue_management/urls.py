@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
+from django.shortcuts import render
+
+def home_view(request):
+    """Home page view"""
+    return render(request, 'index.html')
 
 def api_root(request):
     """API root endpoint"""
@@ -36,5 +41,9 @@ def api_root(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('apps.api.urls')),
-    path('', api_root, name='api-root'),
+    path('', home_view, name='home'),
+    path('users/', include('apps.users.urls')),
+    path('services/', include('apps.services.urls')),
+    path('bookings/', include('apps.bookings.urls')),
+    path('api-info/', api_root, name='api-root'),
 ]
