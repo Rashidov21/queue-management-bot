@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buyurtma tafsilotlari{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-3xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-900">Buyurtma tafsilotlari</h1>
+                    <p class="text-sm text-gray-600 mt-1">Buyurtma ID: #{{ booking.id }}</p>
+                </div>
+                <a href="{% url 'bookings:list' %}" 
+                   class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    Orqaga
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Booking Info -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-medium text-gray-900">Buyurtma ma'lumotlari</h3>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                {% elif booking.status == 'confirmed' %}bg-green-100 text-green-800
+                                {% elif booking.status == 'active' %}bg-blue-100 text-blue-800
+                                {% elif booking.status == 'completed' %}bg-gray-100 text-gray-800
+                                {% elif booking.status == 'cancelled' %}bg-red-100 text-red-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {% if booking.status == 'pending' %}Kutilmoqda
+                                {% elif booking.status == 'confirmed' %}Tasdiqlangan
+                                {% elif booking.status == 'active' %}Faol
+                                {% elif booking.status == 'completed' %}Yakunlangan
+                                {% elif booking.status == 'cancelled' %}Bekor qilingan
+                                {% else %}{{ booking.status }}{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 space-y-6">
+                        <!-- Basic Info -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500">Sana</label>
+                                <p class="mt-1 text-sm text-gray-900">{{ booking.date }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500">Vaqt</label>
+                                <p class="mt-1 text-sm text-gray-900">{{ booking.time }} - {{ booking.get_end_time }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500">Xizmat</label>
+                                <p class="mt-1 text-sm text-gray-900">{{ booking.provider.service.name }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500">Davomiyligi</label>
+                                <p class="mt-1 text-sm text-gray-900">{{ booking.get_duration_minutes }} daqiqa</p>
+                            </div>
+                        </div>
+                        
+                        <!-- People Info -->
+                        <div class="border-t border-gray-200 pt-6">
+                            <h4 class="text-base font-medium text-gray-900 mb-4">Shaxslar</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500">Mijoz</label>
+                                    <div class="mt-1 flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">{{ booking.client.full_name }}</p>
+                                            <p class="text-sm text-gray-500">{{ booking.client.phone }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500">Xizmat ko'rsatuvchi</label>
+                                    <div class="mt-1 flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h2zm3-2a1 1 0 00-1 1v1h2V5a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">{{ booking.provider.user.full_name }}</p>
+                                            <p class="text-sm text-gray-500">{{ booking.provider.location }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Notes -->
+                        {% if booking.notes %}
+                            <div class="border-t border-gray-200 pt-6">
+                                <label class="block text-sm font-medium text-gray-500 mb-2">Izoh</label>
+                                <p class="text-sm text-gray-900 bg-gray-50 rounded-md p-3">{{ booking.notes }}</p>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Timestamps -->
+                        <div class="border-t border-gray-200 pt-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm text-gray-500">
+                                <div>
+                                    <label class="block font-medium text-gray-700">Yaratilgan</label>
+                                    <p>{{ booking.created_at|date:"d.m.Y H:i" }}</p>
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-gray-700">Yangilangan</label>
+                                    <p>{{ booking.updated_at|date:"d.m.Y H:i" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Amallar</h3>
+                    
+                    <div class="space-y-3">
+                        {% if user.is_provider and booking.status == 'pending' %}
+                            <button onclick="confirmBooking({{ booking.id }})" 
+                                    class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Tasdiqlash
+                            </button>
+                        {% endif %}
+                        
+                        {% if booking.can_be_cancelled %}
+                            <button onclick="cancelBooking({{ booking.id }})" 
+                                    class="w-full inline-flex items-center justify-center px-4 py-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                                Bekor qilish
+                            </button>
+                        {% endif %}
+                        
+                        <a href="{% url 'bookings:list' %}" 
+                           class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                            Ro'yxatga qaytish
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Status Info -->
+                <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Holat ma'lumotlari</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Joriy holat:</span>
+                            <span class="text-sm font-medium text-gray-900">
+                                {% if booking.status == 'pending' %}Kutilmoqda
+                                {% elif booking.status == 'confirmed' %}Tasdiqlangan
+                                {% elif booking.status == 'active' %}Faol
+                                {% elif booking.status == 'completed' %}Yakunlangan
+                                {% elif booking.status == 'cancelled' %}Bekor qilingan
+                                {% else %}{{ booking.status }}{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Kelgusi:</span>
+                            <span class="text-sm font-medium {% if booking.is_upcoming %}text-green-600{% else %}text-red-600{% endif %}">
+                                {% if booking.is_upcoming %}Ha{% else %}Yo'q{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Bekor qilish:</span>
+                            <span class="text-sm font-medium {% if booking.can_be_cancelled %}text-green-600{% else %}text-red-600{% endif %}">
+                                {% if booking.can_be_cancelled %}Mumkin{% else %}Mumkin emas{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmBooking(bookingId) {
+    if (confirm('Bu buyurtmani tasdiqlashni xohlaysizmi?')) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (!csrfToken) {
+            alert('CSRF token topilmadi');
+            return;
+        }
+        
+        fetch(`/bookings/${bookingId}/confirm/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken.value,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Xatolik: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Xatolik yuz berdi');
+        });
+    }
+}
+
+function cancelBooking(bookingId) {
+    if (confirm('Bu buyurtmani bekor qilishni xohlaysizmi?')) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (!csrfToken) {
+            alert('CSRF token topilmadi');
+            return;
+        }
+        
+        fetch(`/bookings/${bookingId}/cancel/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken.value,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Xatolik: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Xatolik yuz berdi');
+        });
+    }
+}
+</script>
+{% endblock %}

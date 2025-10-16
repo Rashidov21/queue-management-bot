@@ -13,7 +13,36 @@ from apps.bookings.models import Booking, Notification
 
 def home(request):
     """Home page view"""
+    # Check if user is coming from Telegram
+    telegram_id = request.GET.get('telegram_id')
+    if telegram_id:
+        try:
+            user = User.objects.get(telegram_id=telegram_id)
+            login(request, user)
+            messages.success(request, f'Xush kelibsiz, {user.full_name}!')
+            return redirect('users:profile')
+        except User.DoesNotExist:
+            messages.error(request, 'Foydalanuvchi topilmadi. Iltimos, bot orqali qayta urinib ko\'ring.')
+    
     return render(request, 'index.html')
+
+
+def telegram_login_view(request):
+    """Handle Telegram user login and redirect to profile"""
+    telegram_id = request.GET.get('telegram_id')
+    
+    if not telegram_id:
+        messages.error(request, 'Telegram ID topilmadi.')
+        return redirect('home')
+    
+    try:
+        user = User.objects.get(telegram_id=telegram_id)
+        login(request, user)
+        messages.success(request, f'Xush kelibsiz, {user.full_name}!')
+        return redirect('users:profile')
+    except User.DoesNotExist:
+        messages.error(request, 'Foydalanuvchi topilmadi. Iltimos, bot orqali qayta urinib ko\'ring.')
+        return redirect('home')
 
 
 def login_view(request):
@@ -54,7 +83,7 @@ def register_view(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         phone = request.POST.get('phone')
-        role = request.POST.get('role', 'client')
+        role = request.POST.get('role')
         
         # Validation
         if password1 != password2:
@@ -126,9 +155,9 @@ def dashboard_view(request):
     try:
         provider = request.user.provider_profile
     except Provider.DoesNotExist:
-        messages.error(request, 'Siz hali xizmat ko\'rsatuvchi sifatida ro\'yxatdan o\'tmagansiz')
-        return redirect('users:profile')
-    
+        messages.info(request, 'Xizmat ko\'rsatuvchi profilingizni to\'ldiring')
+        return redirect('users:setup_provider')
+
     # Get statistics
     today = timezone.now().date()
     
@@ -180,8 +209,8 @@ def edit_schedule_view(request):
     try:
         provider = request.user.provider_profile
     except Provider.DoesNotExist:
-        messages.error(request, 'Siz hali xizmat ko\'rsatuvchi sifatida ro\'yxatdan o\'tmagansiz')
-        return redirect('users:profile')
+        messages.info(request, 'Xizmat ko\'rsatuvchi profilingizni to\'ldiring')
+        return redirect('users:setup_provider')
     
     if request.method == 'POST':
         working_days = request.POST.getlist('working_days')
@@ -195,8 +224,8 @@ def edit_schedule_view(request):
         
         messages.success(request, 'Ish jadvali muvaffaqiyatli yangilandi')
         return redirect('users:dashboard')
-    
-    return render(request, 'users/edit_schedule.html', {'provider': provider})
+    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    return render(request, 'users/edit_schedule.html', {'provider': provider, 'days': days})
 
 
 @login_required
@@ -259,4 +288,5 @@ def setup_provider_view(request):
             messages.error(request, 'Tanlangan xizmat topilmadi')
     
     services = Service.objects.filter(is_active=True)
-    return render(request, 'users/setup_provider.html', {'services': services})
+    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    return render(request, 'users/setup_provider.html', {'services': services, 'days': days})

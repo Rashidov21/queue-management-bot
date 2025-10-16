@@ -1,71 +1,146 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-            <i class="bi bi-calendar-check me-2"></i>
-            Navbat Bot
-        </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">
-                        <i class="bi bi-house me-1"></i>Bosh sahifa
+<nav class="bg-blue-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="{% url 'home' %}" class="text-white text-xl font-bold flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                        </svg>
+                        Navbat Bot
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'services:list' %}">
-                        <i class="bi bi-list-ul me-1"></i>Xizmatlar
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:ml-6 md:flex md:space-x-8">
+                    <a href="{% url 'home' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Bosh sahifa
                     </a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'bookings:list' %}">
-                            <i class="bi bi-calendar-event me-1"></i>Buyurtmalarim
+                    <a href="{% url 'services:list' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        Xizmatlar
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'bookings:list' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                            </svg>
+                            Buyurtmalar
                         </a>
-                    </li>
-                    {% if user.is_provider %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:dashboard' %}">
-                                <i class="bi bi-speedometer2 me-1"></i>Boshqaruv paneli
-                            </a>
-                        </li>
                     {% endif %}
-                {% endif %}
-            </ul>
+                        {% if user.is_provider %}
+                            <a href="{% url 'users:dashboard' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
+                                </svg>
+                                Boshqaruv paneli
+                            </a>
+                        {% endif %}
+                
+                </div>
+            </div>
             
-            <ul class="navbar-nav">
+            <!-- User Menu -->
+            <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
                 {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle me-1"></i>{{ user.full_name }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'users:profile' %}">
-                                <i class="bi bi-person me-2"></i>Profil
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'users:logout' %}">
-                                <i class="bi bi-box-arrow-right me-2"></i>Chiqish
-                            </a></li>
-                        </ul>
-                    </li>
+                    <div class="relative">
+                        <button class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium flex items-center" onclick="toggleDropdown()">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ user.full_name }}
+                            <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="{% url 'users:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                </svg>
+                                Profil
+                            </a>
+                            <hr class="my-1">
+                            <a href="{% url 'users:logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"></path>
+                                </svg>
+                                Chiqish
+                            </a>
+                        </div>
+                    </div>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users:login' %}">
-                            <i class="bi bi-box-arrow-in-right me-1"></i>Kirish
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users:register' %}">
-                            <i class="bi bi-person-plus me-1"></i>Ro'yxatdan o'tish
-                        </a>
-                    </li>
+                    <a href="{% url 'users:login' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-2 0V4H5v12h9v-2a1 1 0 112 0v3a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm11.293 6.293a1 1 0 011.414 0L17 10.586V7a1 1 0 112 0v7a1 1 0 11-2 0v-3.586l-1.293 1.293a1 1 0 01-1.414-1.414l3-3z" clip-rule="evenodd"></path>
+                        </svg>
+                        Kirish
+                    </a>
+                    <a href="{% url 'users:register' %}" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+                        </svg>
+                        Ro'yxatdan o'tish
+                    </a>
                 {% endif %}
-            </ul>
+            </div>
+            
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center">
+                <button onclick="toggleMobileMenu()" class="text-white hover:text-blue-200 p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-blue-700">
+            <a href="{% url 'home' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Bosh sahifa</a>
+            <a href="{% url 'services:list' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Xizmatlar</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'bookings:list' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Buyurtmalarim</a>
+                {% if user.is_provider %}
+                    <a href="{% url 'users:dashboard' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Boshqaruv paneli</a>
+                {% endif %}
+                <hr class="border-blue-600">
+                <a href="{% url 'users:profile' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Profil</a>
+                <a href="{% url 'users:logout' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Chiqish</a>
+            {% else %}
+                <a href="{% url 'users:login' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Kirish</a>
+                <a href="{% url 'users:register' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">Ro'yxatdan o'tish</a>
+            {% endif %}
         </div>
     </div>
 </nav>
+
+<script>
+function toggleDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('hidden');
+}
+
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.classList.toggle('hidden');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('userDropdown');
+    const button = event.target.closest('button');
+    
+    if (!button || !button.onclick || button.onclick.toString().indexOf('toggleDropdown') === -1) {
+        dropdown.classList.add('hidden');
+    }
+});
+</script>

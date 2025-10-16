@@ -5,6 +5,8 @@ app_name = 'api'
 
 urlpatterns = [
     # User endpoints
+    path('users/register/', views.UserRegistrationView.as_view(), name='user-register'),
+    path('users/telegram-login/', views.telegram_login, name='telegram-login'),
     path('users/me/', views.UserProfileView.as_view(), name='user-profile'),
     
     # Service endpoints

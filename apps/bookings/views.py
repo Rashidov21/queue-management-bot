@@ -41,6 +41,8 @@ def booking_create_view(request, provider_id):
         # Validate date is not in the past
         try:
             booking_datetime = timezone.datetime.strptime(f"{booking_date} {booking_time}", '%Y-%m-%d %H:%M')
+            if timezone.is_naive(booking_datetime):
+                booking_datetime = timezone.make_aware(booking_datetime)
             if booking_datetime < timezone.now():
                 messages.error(request, 'O\'tgan vaqtni tanlay olmaysiz')
                 return render(request, 'bookings/create.html', {'provider': provider})
@@ -61,11 +63,12 @@ def booking_create_view(request, provider_id):
             return render(request, 'bookings/create.html', {'provider': provider})
         
         # Create booking
+        from datetime import date, time
         booking = Booking.objects.create(
             client=request.user,
             provider=provider,
-            date=booking_date,
-            time=booking_time,
+            date=date.fromisoformat(booking_date),
+            time=time.fromisoformat(booking_time),
             notes=notes,
             status='pending'
         )

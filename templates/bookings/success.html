@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buyurtma muvaffaqiyatli yaratildi{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <!-- Success Icon -->
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="h-8 w-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <h1 class="mt-6 text-3xl font-bold text-gray-900">
+                Buyurtma muvaffaqiyatli yaratildi!
+            </h1>
+            <p class="mt-2 text-sm text-gray-600">
+                Buyurtmangiz qabul qilindi va xizmat ko'rsatuvchiga yuborildi.
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <!-- Booking Summary -->
+            <div class="mb-6">
+                <h2 class="text-lg font-medium text-gray-900 mb-4">Buyurtma xulosasi</h2>
+                <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Buyurtma ID:</span>
+                        <span class="text-sm font-medium text-gray-900">#{{ booking.id }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Xizmat:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ booking.provider.service.name }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Xizmat ko'rsatuvchi:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ booking.provider.user.full_name }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Sana:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ booking.date }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Vaqt:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ booking.time }} - {{ booking.get_end_time }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Davomiyligi:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ booking.get_duration_minutes }} daqiqa</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Manzil:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ booking.provider.location }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Holat:</span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            Kutilmoqda
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="mb-6">
+                <h3 class="text-base font-medium text-gray-900 mb-3">Keyingi qadamlar</h3>
+                <div class="space-y-2 text-sm text-gray-600">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <span class="text-xs font-medium text-blue-600">1</span>
+                            </div>
+                        </div>
+                        <p>Xizmat ko'rsatuvchi buyurtmangizni ko'rib chiqadi</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <span class="text-xs font-medium text-blue-600">2</span>
+                            </div>
+                        </div>
+                        <p>Buyurtma tasdiqlanganda sizga xabar beriladi</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <span class="text-xs font-medium text-blue-600">3</span>
+                            </div>
+                        </div>
+                        <p>Belgilangan vaqtda xizmatni olasiz</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                <h3 class="text-sm font-medium text-blue-900 mb-2">Aloqa ma'lumotlari</h3>
+                <div class="text-sm text-blue-800">
+                    <p class="mb-1">
+                        <span class="font-medium">Xizmat ko'rsatuvchi:</span> {{ booking.provider.user.full_name }}
+                    </p>
+                    <p class="mb-1">
+                        <span class="font-medium">Telefon:</span> {{ booking.provider.user.phone }}
+                    </p>
+                    <p>
+                        <span class="font-medium">Manzil:</span> {{ booking.provider.location }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="space-y-3">
+                <a href="{% url 'bookings:detail' booking.id %}" 
+                   class="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    Buyurtma tafsilotlarini ko'rish
+                </a>
+                
+                <a href="{% url 'bookings:list' %}" 
+                   class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2z" clip-rule="evenodd"></path>
+                    </svg>
+                    Barcha buyurtmalarim
+                </a>
+                
+                <a href="{% url 'services:list' %}" 
+                   class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    Yangi buyurtma berish
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

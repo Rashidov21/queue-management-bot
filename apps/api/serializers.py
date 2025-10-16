@@ -100,6 +100,8 @@ class BookingSerializer(serializers.ModelSerializer):
         
         # Check if date is not in the past
         booking_datetime = timezone.datetime.combine(data['date'], data['time'])
+        if timezone.is_naive(booking_datetime):
+            booking_datetime = timezone.make_aware(booking_datetime)
         if booking_datetime < timezone.now():
             raise serializers.ValidationError("Cannot book in the past")
         
@@ -134,6 +136,8 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         
         # Check if date is not in the past
         booking_datetime = timezone.datetime.combine(data['date'], data['time'])
+        if timezone.is_naive(booking_datetime):
+            booking_datetime = timezone.make_aware(booking_datetime)
         if booking_datetime < timezone.now():
             raise serializers.ValidationError("Cannot book in the past")
         

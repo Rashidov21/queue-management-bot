@@ -8,6 +8,8 @@ A modern, stable Django-based queue management system with Telegram bot integrat
 - **SQLite** database (production-ready)
 - **Django Admin** panel for management
 - **Telegram Bot** integration
+- **Modern Tailwind CSS** frontend
+- **Unified startup** - bot and web server start together
 - **Clean, async-ready** architecture
 - **Windows-compatible** (no compilation issues)
 
@@ -85,17 +87,29 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### Start Django Server:
+### Start Both Bot and Web Server (Recommended):
 ```bash
-python run_django.py
+python run_bot.py
 ```
+This will start both the Telegram bot and Django web server simultaneously.
+- Telegram Bot: Active and ready to receive messages
+- Web Interface: http://localhost:8001/
 - Admin Panel: http://localhost:8001/admin/
 - API: http://localhost:8001/api/
 - Login: admin / admin123
 
-### Start Telegram Bot:
+### Alternative: Start Services Separately:
 ```bash
-python run_bot.py
+# Start Django Server only
+python run_django.py
+
+# Start Telegram Bot only (in another terminal)
+python telegram_bot.py
+```
+
+### Test Integration:
+```bash
+python test_integration.py
 ```
 
 ## 📊 API Endpoints

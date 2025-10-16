@@ -1,6 +1,7 @@
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import date, timedelta
@@ -14,6 +15,45 @@ from .serializers import (
 User = get_user_model()
 
 
+class UserRegistrationView(generics.CreateAPIView):
+    """User registration view for Telegram bot"""
+    
+    serializer_class = UserSerializer
+    permission_classes = []  # No authentication required for registration
+    
+    def create(self, request, *args, **kwargs):
+        """Create new user from Telegram data"""
+        telegram_id = request.data.get('telegram_id')
+        username = request.data.get('username')
+        
+        # Check if user already exists
+        try:
+            existing_user = User.objects.get(telegram_id=telegram_id)
+            return Response({
+                'id': existing_user.id,
+                'username': existing_user.username,
+                'telegram_id': existing_user.telegram_id,
+                'role': existing_user.role,
+                'message': 'User already exists'
+            }, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            pass
+        
+        # Create new user
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({
+                'id': user.id,
+                'username': user.username,
+                'telegram_id': user.telegram_id,
+                'role': user.role,
+                'message': 'User created successfully'
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class UserProfileView(generics.RetrieveUpdateAPIView):
     """User profile view"""
     
@@ -22,6 +62,36 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     
     def get_object(self):
         return self.request.user
+
+
+@api_view(['GET'])
+@permission_classes([])
+def telegram_login(request):
+    """Login user by telegram_id"""
+    telegram_id = request.GET.get('telegram_id')
+    
+    if not telegram_id:
+        return Response({'error': 'telegram_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = User.objects.get(telegram_id=telegram_id)
+        # Log the user in
+        from django.contrib.auth import login
+        login(request, user)
+        
+        return Response({
+            'success': True,
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'telegram_id': user.telegram_id,
+                'role': user.role
+            }
+        })
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class ServiceListView(generics.ListAPIView):

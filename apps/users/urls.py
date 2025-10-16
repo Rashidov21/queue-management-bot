@@ -4,6 +4,7 @@ from . import views
 app_name = 'users'
 
 urlpatterns = [
+    path('telegram-login/', views.telegram_login_view, name='telegram_login'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),

@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buyurtma berish - {{ provider.user.full_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-3xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-900">Buyurtma berish</h1>
+                    <p class="text-sm text-gray-600 mt-1">{{ provider.user.full_name }} - {{ provider.service.name }}</p>
+                </div>
+                <a href="{% url 'services:list' %}" 
+                   class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    Orqaga
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Provider Info -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Xizmat ko'rsatuvchi</h3>
+                    
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-base font-medium text-gray-900">{{ provider.user.full_name }}</h4>
+                            <p class="text-sm text-gray-500">{{ provider.service.name }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ provider.location }}
+                        </div>
+                        
+                        <div class="flex items-center text-sm text-gray-600">
+                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ provider.service.duration_minutes }} daqiqa
+                        </div>
+                        
+                        <div class="flex items-center text-sm text-gray-600">
+                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                            </svg>
+                            {% for day in provider.working_days %}
+                                {% if day == 'monday' %}Dushanba
+                                {% elif day == 'tuesday' %}Seshanba
+                                {% elif day == 'wednesday' %}Chorshanba
+                                {% elif day == 'thursday' %}Payshanba
+                                {% elif day == 'friday' %}Juma
+                                {% elif day == 'saturday' %}Shanba
+                                {% elif day == 'sunday' %}Yakshanba
+                                {% endif %}
+                                {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="flex items-center text-sm text-gray-600">
+                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ provider.start_time }} - {{ provider.end_time }}
+                        </div>
+                    </div>
+                    
+                    {% if provider.description %}
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Tavsif</h4>
+                            <p class="text-sm text-gray-600">{{ provider.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Booking Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">Buyurtma ma'lumotlari</h3>
+                    </div>
+                    
+                    <form method="post" class="p-6 space-y-6">
+                        {% csrf_token %}
+                        
+                        <!-- Date Selection -->
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
+                                Sana tanlang
+                            </label>
+                            <input type="date" name="date" id="date" required
+                                   min="{% now 'Y-m-d' %}"
+                                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        
+                        <!-- Time Selection -->
+                        <div>
+                            <label for="time" class="block text-sm font-medium text-gray-700 mb-2">
+                                Vaqt tanlang
+                            </label>
+                            <input type="time" name="time" id="time" required
+                                   min="{{ provider.start_time }}"
+                                   max="{{ provider.end_time }}"
+                                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        
+                        <!-- Notes -->
+                        <div>
+                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
+                                Qo'shimcha ma'lumot (ixtiyoriy)
+                            </label>
+                            <textarea name="notes" id="notes" rows="3"
+                                      class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                      placeholder="Buyurtma haqida qo'shimcha ma'lumot..."></textarea>
+                        </div>
+                        
+                        <!-- Booking Summary -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Buyurtma xulosasi</h4>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div class="flex justify-between">
+                                    <span>Xizmat:</span>
+                                    <span class="font-medium">{{ provider.service.name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Davomiyligi:</span>
+                                    <span class="font-medium">{{ provider.service.duration_minutes }} daqiqa</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Xizmat ko'rsatuvchi:</span>
+                                    <span class="font-medium">{{ provider.user.full_name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Manzil:</span>
+                                    <span class="font-medium">{{ provider.location }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="flex justify-end space-x-3">
+                            <a href="{% url 'services:list' %}" 
+                               class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                Bekor qilish
+                            </a>
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Buyurtma berish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').min = today;
+    
+    // Set time constraints based on provider's working hours
+    const timeInput = document.getElementById('time');
+    const dateInput = document.getElementById('date');
+    
+    // Update time constraints when date changes
+    dateInput.addEventListener('change', function() {
+        const selectedDate = new Date(this.value);
+        const today = new Date();
+        
+        if (selectedDate.toDateString() === today.toDateString()) {
+            // If today is selected, set minimum time to current time + 1 hour
+            const now = new Date();
+            const minTime = new Date(now.getTime() + 60 * 60 * 1000); // +1 hour
+            const minTimeString = minTime.toTimeString().slice(0, 5);
+            timeInput.min = minTimeString;
+        } else {
+            // For future dates, use provider's start time
+            timeInput.min = '{{ provider.start_time }}';
+        }
+        
+        timeInput.max = '{{ provider.end_time }}';
+    });
+});
+</script>
+{% endblock %}

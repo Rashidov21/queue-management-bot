@@ -8,8 +8,12 @@ import asyncio
 import logging
 import os
 import sys
+import subprocess
+import threading
+import platform
 from datetime import date, time, timedelta
 from typing import Dict, List
+from pathlib import Path
 
 import aiohttp
 from aiogram import Bot, Dispatcher, types
@@ -96,18 +100,44 @@ async def get_or_create_user(telegram_id: int, username: str) -> Dict:
     }
 
 
+async def register_user_in_django(telegram_user):
+    """Register user in Django project using Telegram data"""
+    try:
+        # Prepare user data from Telegram
+        user_data = {
+            "username": telegram_user.username or f"user_{telegram_user.id}",
+            "first_name": telegram_user.first_name or "",
+            "last_name": telegram_user.last_name or "",
+            "telegram_id": telegram_user.id,
+            "role": "client"
+        }
+        
+        # Register user via API
+        response = await make_api_request('POST', '/users/register/', user_data)
+        
+        if 'error' not in response:
+            logger.info(f"User {telegram_user.id} registered successfully")
+        else:
+            logger.info(f"User {telegram_user.id} already exists or registration failed")
+            
+    except Exception as e:
+        logger.error(f"Error registering user {telegram_user.id}: {e}")
+
+
 # Command handlers
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     """Start command handler"""
     await state.clear()
     
-    user = await get_or_create_user(message.from_user.id, message.from_user.username or "user")
+    # Register user in Django project
+    await register_user_in_django(message.from_user)
     
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="📋 Xizmatlar"), KeyboardButton(text="📅 Mening buyurtmalarim")],
-            [KeyboardButton(text="👤 Profil"), KeyboardButton(text="ℹ️ Yordam")]
+            [KeyboardButton(text="👤 Profil"), KeyboardButton(text="ℹ️ Yordam")],
+            [KeyboardButton(text="🌐 Web ilovasi")]
         ],
         resize_keyboard=True,
         one_time_keyboard=False
@@ -364,6 +394,23 @@ async def show_profile(message: types.Message):
     )
 
 
+
+
+@dp.message(lambda message: message.text == "🌐 Web ilovasi")
+async def show_web_app(message: types.Message):
+    """Open web application"""
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🌐 Web ilovasini ochish", url=f"http://localhost:8001/users/telegram-login/?telegram_id={message.from_user.id}")]
+    ])
+    
+    await message.answer(
+        "🌐 **Web ilovasini ochish**\n\n"
+        "To'liq funksionallik uchun web ilovasini ishlatishingiz mumkin.\n\n"
+        "Quyidagi tugmani bosing:",
+        reply_markup=keyboard
+    )
+
+
 @dp.message(lambda message: message.text == "ℹ️ Yordam")
 async def show_help(message: types.Message):
     """Show help information"""
@@ -376,6 +423,8 @@ async def show_help(message: types.Message):
         "• Mening buyurtmalarim - Buyurtmalaringizni ko'rish\n"
         "• Profil - Profilingizni ko'rish\n"
         "• Yordam - Bu yordamni ko'rsatish\n\n"
+        "🌐 **Web ilovasi:**\n"
+        "To'liq funksionallik uchun 'Web ilovasi' tugmasini ishlating\n\n"
         "📞 **Qo'llab-quvvatlash:**\n"
         "Agar yordamga muhtoj bo'lsangiz, administratorga murojaat qiling.\n\n"
         "Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."
@@ -391,8 +440,51 @@ async def handle_unknown_message(message: types.Message):
     )
 
 
+def start_django_server():
+    """Start Django development server in a separate thread"""
+    try:
+        # Set Django settings module
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'queue_management.settings')
+        
+        # Change to project directory
+        project_dir = Path(__file__).parent
+        os.chdir(project_dir)
+        
+        logger.info("Starting Django web server on port 8001...")
+        
+        # Use virtual environment Python if available
+        if platform.system() == "Windows":
+            python_cmd = "venv\\Scripts\\python.exe"
+        else:
+            python_cmd = "venv/bin/python"
+        
+        # Check if virtual environment exists
+        if Path("venv").exists() and Path(python_cmd).exists():
+            python_executable = python_cmd
+        else:
+            python_executable = sys.executable
+        
+        # Start Django development server
+        subprocess.run([
+            python_executable, 'manage.py', 'runserver', '8001'
+        ], check=True)
+    except Exception as e:
+        logger.error(f"Error starting Django server: {e}")
+
+
 async def main():
-    """Main function to start the bot"""
+    """Main function to start the bot and web server"""
+    logger.info("Starting Queue Management System...")
+    logger.info("Starting Django web server...")
+    
+    # Start Django server in a separate thread
+    django_thread = threading.Thread(target=start_django_server, daemon=True)
+    django_thread.start()
+    
+    # Give Django server time to start
+    await asyncio.sleep(3)
+    
+    logger.info("Django web server started at http://localhost:8001")
     logger.info("Telegram bot ishga tushmoqda...")
     
     # Delete webhook if it exists

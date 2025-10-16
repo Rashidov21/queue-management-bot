@@ -4,114 +4,147 @@
 {% block title %}Navbatni Boshqarish Boti - Bosh sahifa{% endblock %}
 
 {% block content %}
-<div class="hero-section bg-gradient-primary text-white py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+                <h1 class="text-4xl lg:text-6xl font-bold mb-6">
                     Navbatni Boshqarish Botiga Xush Kelibsiz!
                 </h1>
-                <p class="lead mb-4">
+                <p class="text-xl mb-8 text-blue-100">
                     Xizmatlarni oson va qulay tarzda buyurtma qiling. 
                     Sartaroshlar, go'zallik studiyalari va boshqa xizmat ko'rsatuvchilar bilan 
                     navbatni boshqaring.
                 </p>
-                <div class="d-flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-4">
                     {% if not user.is_authenticated %}
-                        <a href="{% url 'users:register' %}" class="btn btn-light btn-lg">
-                            <i class="bi bi-person-plus me-2"></i>Ro'yxatdan o'tish
+                        <a href="{% url 'users:register' %}" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+                            </svg>
+                            Ro'yxatdan o'tish
                         </a>
-                        <a href="{% url 'users:login' %}" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Kirish
+                        <a href="{% url 'users:login' %}" class="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-2 0V4H5v12h9v-2a1 1 0 112 0v3a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm11.293 6.293a1 1 0 011.414 0L17 10.586V7a1 1 0 112 0v7a1 1 0 11-2 0v-3.586l-1.293 1.293a1 1 0 01-1.414-1.414l3-3z" clip-rule="evenodd"></path>
+                            </svg>
+                            Kirish
                         </a>
                     {% else %}
                         {% if user.is_client %}
-                            <a href="{% url 'services:list' %}" class="btn btn-light btn-lg">
-                                <i class="bi bi-list-ul me-2"></i>Xizmatlarni ko'rish
+                            <a href="{% url 'services:list' %}" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold flex items-center justify-center transition duration-300">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Xizmatlarni ko'rish
                             </a>
                         {% else %}
-                            <a href="{% url 'users:dashboard' %}" class="btn btn-light btn-lg">
-                                <i class="bi bi-speedometer2 me-2"></i>Boshqaruv paneli
+                            <a href="{% url 'users:dashboard' %}" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold flex items-center justify-center transition duration-300">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
+                                </svg>
+                                Boshqaruv paneli
                             </a>
                         {% endif %}
                     {% endif %}
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <i class="bi bi-calendar-check display-1 opacity-75"></i>
+            <div class="text-center lg:text-right">
+                <div class="inline-flex items-center justify-center w-32 h-32 bg-white bg-opacity-20 rounded-full">
+                    <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                    </svg>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container my-5">
-    <div class="row">
-        <div class="col-12">
-            <h2 class="text-center mb-5">Siz kim sifatida kiryapsiz?</h2>
-        </div>
+<!-- Role Selection Section -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Siz kim sifatida kiryapsiz?</h2>
+        <p class="text-lg text-gray-600">Quyidagi variantlardan birini tanlang</p>
     </div>
     
-    <div class="row g-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Client Card -->
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm hover-card">
-                <div class="card-body text-center p-5">
-                    <div class="mb-4">
-                        <i class="bi bi-person-heart display-1 text-primary"></i>
-                    </div>
-                    <h3 class="card-title">Mijoz</h3>
-                    <p class="card-text text-muted mb-4">
-                        Xizmatlarni ko'rib chiqing, ko'rsatuvchini tanlang va 
-                        navbatga yoziling. Oson va qulay!
-                    </p>
-                    <div class="d-grid gap-2">
-                        {% if user.is_authenticated and user.is_client %}
-                            <a href="{% url 'services:list' %}" class="btn btn-primary btn-lg">
-                                <i class="bi bi-list-ul me-2"></i>Xizmatlarni ko'rish
-                            </a>
-                        {% elif user.is_authenticated and user.is_provider %}
-                            <a href="{% url 'users:profile' %}" class="btn btn-outline-primary btn-lg">
-                                <i class="bi bi-person-gear me-2"></i>Profilni o'zgartirish
-                            </a>
-                        {% else %}
-                            <a href="{% url 'users:register' %}?role=client" class="btn btn-primary btn-lg">
-                                <i class="bi bi-person-plus me-2"></i>Mijoz sifatida ro'yxatdan o'tish
-                            </a>
-                        {% endif %}
-                    </div>
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 p-8">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-6">
+                    <svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Mijoz</h3>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Xizmatlarni ko'rib chiqing, ko'rsatuvchini tanlang va 
+                    navbatga yoziling. Oson va qulay!
+                </p>
+                <div class="space-y-3">
+                    {% if user.is_authenticated and user.is_client %}
+                        <a href="{% url 'services:list' %}" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Xizmatlarni ko'rish
+                        </a>
+                    {% elif user.is_authenticated and user.is_provider %}
+                        <a href="{% url 'users:profile' %}" class="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                            </svg>
+                            Profilni o'zgartirish
+                        </a>
+                    {% else %}
+                        <a href="{% url 'users:register' %}?role=client" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+                            </svg>
+                            Mijoz sifatida ro'yxatdan o'tish
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
         
         <!-- Provider Card -->
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm hover-card">
-                <div class="card-body text-center p-5">
-                    <div class="mb-4">
-                        <i class="bi bi-person-badge display-1 text-success"></i>
-                    </div>
-                    <h3 class="card-title">Xizmat Ko'rsatuvchi</h3>
-                    <p class="card-text text-muted mb-4">
-                        Buyurtmalarni boshqaring, ish jadvalini sozlang va 
-                        mijozlaringiz bilan ishlang.
-                    </p>
-                    <div class="d-grid gap-2">
-                        {% if user.is_authenticated and user.is_provider %}
-                            <a href="{% url 'users:dashboard' %}" class="btn btn-success btn-lg">
-                                <i class="bi bi-speedometer2 me-2"></i>Boshqaruv paneli
-                            </a>
-                        {% elif user.is_authenticated and user.is_client %}
-                            <a href="{% url 'users:profile' %}" class="btn btn-outline-success btn-lg">
-                                <i class="bi bi-person-gear me-2"></i>Profilni o'zgartirish
-                            </a>
-                        {% else %}
-                            <a href="{% url 'users:register' %}?role=provider" class="btn btn-success btn-lg">
-                                <i class="bi bi-person-plus me-2"></i>Ko'rsatuvchi sifatida ro'yxatdan o'tish
-                            </a>
-                        {% endif %}
-                    </div>
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 p-8">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+                    <svg class="w-10 h-10 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h2zm3-2a1 1 0 00-1 1v1h2V5a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Xizmat Ko'rsatuvchi</h3>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Buyurtmalarni boshqaring, ish jadvalini sozlang va 
+                    mijozlaringiz bilan ishlang.
+                </p>
+                <div class="space-y-3">
+                    {% if user.is_authenticated and user.is_provider %}
+                        <a href="{% url 'users:dashboard' %}" class="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
+                            </svg>
+                            Boshqaruv paneli
+                        </a>
+                    {% elif user.is_authenticated and user.is_client %}
+                        <a href="{% url 'users:profile' %}" class="w-full border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                            </svg>
+                            Profilni o'zgartirish
+                        </a>
+                    {% else %}
+                        <a href="{% url 'users:register' %}?role=provider" class="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+                            </svg>
+                            Ko'rsatuvchi sifatida ro'yxatdan o'tish
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -119,34 +152,39 @@
 </div>
 
 <!-- Features Section -->
-<div class="bg-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="text-center mb-5">Nima uchun bizni tanlashingiz kerak?</h2>
-            </div>
+<div class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Nima uchun bizni tanlashingiz kerak?</h2>
+            <p class="text-lg text-gray-600">Bizning afzalliklarimiz</p>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="text-center">
-                    <i class="bi bi-clock text-primary display-4 mb-3"></i>
-                    <h4>Oson va Tez</h4>
-                    <p class="text-muted">Bir necha daqiqada xizmatni buyurtma qiling</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                    </svg>
                 </div>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">Oson va Tez</h4>
+                <p class="text-gray-600">Bir necha daqiqada xizmatni buyurtma qiling</p>
             </div>
-            <div class="col-md-4">
-                <div class="text-center">
-                    <i class="bi bi-shield-check text-success display-4 mb-3"></i>
-                    <h4>Xavfsiz</h4>
-                    <p class="text-muted">Ma'lumotlaringiz himoyalangan</p>
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
                 </div>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">Xavfsiz</h4>
+                <p class="text-gray-600">Ma'lumotlaringiz himoyalangan</p>
             </div>
-            <div class="col-md-4">
-                <div class="text-center">
-                    <i class="bi bi-phone text-info display-4 mb-3"></i>
-                    <h4>Qulay</h4>
-                    <p class="text-muted">Har qanday qurilmadan foydalaning</p>
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+                    </svg>
                 </div>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">Qulay</h4>
+                <p class="text-gray-600">Har qanday qurilmadan foydalaning</p>
             </div>
         </div>
     </div>
