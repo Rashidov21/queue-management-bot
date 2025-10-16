@@ -266,64 +266,119 @@
 </div>
 
 <script>
-function confirmBooking(bookingId) {
-    if (confirm('Bu buyurtmani tasdiqlashni xohlaysizmi?')) {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-        if (!csrfToken) {
-            alert('CSRF token topilmadi');
-            return;
+// Confirmation Modal Functions
+function showConfirmModal(title, message, onConfirm) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+    modal.innerHTML = `
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+                    <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mt-2">${title}</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">${message}</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmBtn" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 mr-2">
+                        Tasdiqlash
+                    </button>
+                    <button id="cancelBtn" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Bekor qilish
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    document.getElementById('confirmBtn').onclick = () => {
+        document.body.removeChild(modal);
+        onConfirm();
+    };
+    
+    document.getElementById('cancelBtn').onclick = () => {
+        document.body.removeChild(modal);
+    };
+    
+    // Close on backdrop click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
         }
-        
-        fetch(`/bookings/${bookingId}/confirm/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken.value,
-                'Content-Type': 'application/json',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Xatolik: ' + data.error);
+    };
+}
+
+function confirmBooking(bookingId) {
+    showConfirmModal(
+        'Buyurtmani tasdiqlash',
+        'Bu buyurtmani tasdiqlashni xohlaysizmi? Tasdiqlangan buyurtma mijozga xabar beriladi.',
+        () => {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfToken) {
+                alert('CSRF token topilmadi');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Xatolik yuz berdi');
-        });
-    }
+            
+            fetch(`/bookings/${bookingId}/confirm/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken.value,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Xatolik: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Xatolik yuz berdi');
+            });
+        }
+    );
 }
 
 function cancelBooking(bookingId) {
-    if (confirm('Bu buyurtmani bekor qilishni xohlaysizmi?')) {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-        if (!csrfToken) {
-            alert('CSRF token topilmadi');
-            return;
-        }
-        
-        fetch(`/bookings/${bookingId}/cancel/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken.value,
-                'Content-Type': 'application/json',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Xatolik: ' + data.error);
+    showConfirmModal(
+        'Buyurtmani bekor qilish',
+        'Bu buyurtmani bekor qilishni xohlaysizmi? Bekor qilingan buyurtma qayta tiklanmaydi.',
+        () => {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfToken) {
+                alert('CSRF token topilmadi');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Xatolik yuz berdi');
-        });
-    }
+            
+            fetch(`/bookings/${bookingId}/cancel/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken.value,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Xatolik: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Xatolik yuz berdi');
+            });
+        }
+    );
 }
 </script>
 {% endblock %}

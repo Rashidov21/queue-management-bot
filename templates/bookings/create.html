@@ -81,7 +81,7 @@
                             <svg class="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                             </svg>
-                            {{ provider.start_time }} - {{ provider.end_time }}
+                            {{ provider.start_time|date:"H:i" }} - {{ provider.end_time|date:"H:i" }}
                         </div>
                     </div>
                     
@@ -207,6 +207,87 @@ document.addEventListener('DOMContentLoaded', function() {
         
         timeInput.max = '{{ provider.end_time }}';
     });
+    
+    // Booking Creation Confirmation
+    const form = document.querySelector('form');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(form);
+        const date = formData.get('date');
+        const time = formData.get('time');
+        const notes = formData.get('notes');
+        
+        // Show confirmation modal
+        showBookingConfirmModal(date, time, notes, () => {
+            form.submit();
+        });
+    });
 });
+
+function showBookingConfirmModal(date, time, notes, onConfirm) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+    modal.innerHTML = `
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mt-2">Buyurtmani tasdiqlash</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500 mb-4">Quyidagi ma'lumotlar bilan buyurtma berishni xohlaysizmi?</p>
+                    <div class="text-left bg-gray-50 rounded-lg p-3 space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Sana:</span>
+                            <span class="text-sm font-medium text-gray-900">${date}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Vaqt:</span>
+                            <span class="text-sm font-medium text-gray-900">${time}</span>
+                        </div>
+                        ${notes ? `
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Izoh:</span>
+                            <span class="text-sm font-medium text-gray-900">${notes}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmBtn" class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300 mr-2">
+                        Tasdiqlash
+                    </button>
+                    <button id="cancelBtn" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Bekor qilish
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    document.getElementById('confirmBtn').onclick = () => {
+        document.body.removeChild(modal);
+        onConfirm();
+    };
+    
+    document.getElementById('cancelBtn').onclick = () => {
+        document.body.removeChild(modal);
+    };
+    
+    // Close on backdrop click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    };
+}
 </script>
 {% endblock %}

@@ -106,7 +106,7 @@
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm text-gray-600">Ish vaqti:</span>
                                     <span class="text-sm font-medium text-gray-900">
-                                        {{ provider.start_time }} - {{ provider.end_time }}
+                                        {{ provider.start_time|date:"H:i" }} - {{ provider.end_time|date:"H:i" }}
                                     </span>
                                 </div>
                                 <div class="flex items-center justify-between">

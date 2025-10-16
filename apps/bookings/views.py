@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from datetime import date, timedelta
+from datetime import date, time, timedelta
 from .models import Booking, Notification
 from apps.services.models import Provider
 from apps.users.models import User
@@ -76,7 +76,6 @@ def booking_create_view(request, provider_id):
             return render(request, 'bookings/create.html', {'provider': provider})
         
         # Create booking
-        from datetime import date, time
         booking = Booking.objects.create(
             client=request.user,
             provider=provider,
