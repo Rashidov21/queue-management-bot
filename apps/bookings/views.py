@@ -50,6 +50,19 @@ def booking_create_view(request, provider_id):
             messages.error(request, 'Noto\'g\'ri sana yoki vaqt formati')
             return render(request, 'bookings/create.html', {'provider': provider})
         
+        # Validate working days
+        booking_date_obj = date.fromisoformat(booking_date)
+        day_name = booking_date_obj.strftime('%A').lower()
+        if day_name not in provider.working_days:
+            messages.error(request, f'Bu kun {provider.user.full_name} uchun ish kuni emas')
+            return render(request, 'bookings/create.html', {'provider': provider})
+        
+        # Validate working hours
+        booking_time_obj = time.fromisoformat(booking_time)
+        if booking_time_obj < provider.start_time or booking_time_obj >= provider.end_time:
+            messages.error(request, f'Bu vaqt {provider.user.full_name} uchun ish vaqti emas ({provider.start_time} - {provider.end_time})')
+            return render(request, 'bookings/create.html', {'provider': provider})
+        
         # Check if slot is available
         existing_booking = Booking.objects.filter(
             provider=provider,

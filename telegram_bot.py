@@ -109,6 +109,7 @@ async def register_user_in_django(telegram_user):
             "first_name": telegram_user.first_name or "",
             "last_name": telegram_user.last_name or "",
             "telegram_id": telegram_user.id,
+            "telegram_username": telegram_user.username or "",
             "role": "client"
         }
         
@@ -400,7 +401,7 @@ async def show_profile(message: types.Message):
 async def show_web_app(message: types.Message):
     """Open web application"""
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🌐 Web ilovasini ochish", url=f"http://localhost:8001/users/telegram-login/?telegram_id={message.from_user.id}")]
+        [InlineKeyboardButton(text="🌐 Web ilovasini ochish", url=f"https://d9a7b9b528c1.ngrok-free.app/users/telegram-login/?telegram_id={message.from_user.id}")]
     ])
     
     await message.answer(
@@ -424,7 +425,8 @@ async def show_help(message: types.Message):
         "• Profil - Profilingizni ko'rish\n"
         "• Yordam - Bu yordamni ko'rsatish\n\n"
         "🌐 **Web ilovasi:**\n"
-        "To'liq funksionallik uchun 'Web ilovasi' tugmasini ishlating\n\n"
+        "To'liq funksionallik uchun 'Web ilovasi' tugmasini ishlating\n"
+        "URL: https://d9a7b9b528c1.ngrok-free.app\n\n"
         "📞 **Qo'llab-quvvatlash:**\n"
         "Agar yordamga muhtoj bo'lsangiz, administratorga murojaat qiling.\n\n"
         "Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."

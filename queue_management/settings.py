@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-9khj!gp$o@1asx8(_y20%5f$p(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']  # For MVP development
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','d9a7b9b528c1.ngrok-free.app']  # For MVP development
 
 
 # Application definition

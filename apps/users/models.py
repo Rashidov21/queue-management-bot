@@ -29,6 +29,12 @@ class User(AbstractUser):
         unique=True,
         help_text="Telegram user ID"
     )
+    telegram_username = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Telegram username (without @)"
+    )
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -54,3 +60,15 @@ class User(AbstractUser):
     def is_client(self):
         """Check if user is a client"""
         return self.role == 'client'
+    
+    def get_telegram_link(self):
+        """Get clickable Telegram link if username exists"""
+        if self.telegram_username:
+            return f"https://t.me/{self.telegram_username}"
+        return None
+    
+    def get_telegram_display(self):
+        """Get display name for Telegram username"""
+        if self.telegram_username:
+            return f"@{self.telegram_username}"
+        return "Telegram username not set"

@@ -18,8 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name', 
-            'full_name', 'role', 'phone', 'telegram_id', 'is_provider', 
-            'is_client', 'date_joined'
+            'full_name', 'role', 'phone', 'telegram_id', 'telegram_username', 
+            'is_provider', 'is_client', 'date_joined'
         ]
         read_only_fields = ['id', 'date_joined']
 
@@ -105,6 +105,15 @@ class BookingSerializer(serializers.ModelSerializer):
         if booking_datetime < timezone.now():
             raise serializers.ValidationError("Cannot book in the past")
         
+        # Validate working days
+        day_name = data['date'].strftime('%A').lower()
+        if day_name not in provider.working_days:
+            raise serializers.ValidationError(f"This day is not a working day for {provider.user.full_name}")
+        
+        # Validate working hours
+        if data['time'] < provider.start_time or data['time'] >= provider.end_time:
+            raise serializers.ValidationError(f"This time is outside working hours ({provider.start_time} - {provider.end_time})")
+        
         # Check if slot is available
         if Booking.objects.filter(
             provider=provider,
@@ -140,6 +149,15 @@ class BookingCreateSerializer(serializers.ModelSerializer):
             booking_datetime = timezone.make_aware(booking_datetime)
         if booking_datetime < timezone.now():
             raise serializers.ValidationError("Cannot book in the past")
+        
+        # Validate working days
+        day_name = data['date'].strftime('%A').lower()
+        if day_name not in provider.working_days:
+            raise serializers.ValidationError(f"This day is not a working day for {provider.user.full_name}")
+        
+        # Validate working hours
+        if data['time'] < provider.start_time or data['time'] >= provider.end_time:
+            raise serializers.ValidationError(f"This time is outside working hours ({provider.start_time} - {provider.end_time})")
         
         # Check if slot is available
         if Booking.objects.filter(
