@@ -36,235 +36,204 @@
     <div id="quickActions" class="hidden bg-blue-50 border-b border-blue-200">
         <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8">
             <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-3">
-                <button onclick="toggleAvailability()" 
+                    <button onclick="toggleAvailability()" 
                         class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white {% if provider.is_accepting %}bg-red-600 hover:bg-red-700{% else %}bg-green-600 hover:bg-green-700{% endif %}">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                    </svg>
-                    {% if provider.is_accepting %}
-                        Buyurtmalarni to'xtatish
-                    {% else %}
-                        Buyurtmalarni qabul qilish
-                    {% endif %}
-                </button>
-                <a href="{% url 'users:edit_schedule' %}" 
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        {% if provider.is_accepting %}
+                            Buyurtmalarni to'xtatish
+                        {% else %}
+                            Buyurtmalarni qabul qilish
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'users:edit_schedule' %}" 
                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
-                    </svg>
-                    Jadvalni tahrirlash
-                </a>
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                        </svg>
+                        Jadvalni tahrirlash
+                    </a>
             </div>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6 mb-8">
-            <div class="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-200" onclick="loadBookings('all')">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Mobile-First Content -->
+    <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+        <!-- Mobile Stats Overview -->
+        <div class="mb-6">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-base font-medium text-gray-900">Bugungi ko'rsatkichlar</h2>
+                    <span class="text-xs text-gray-500">{{ "now"|date:"d.m.Y" }}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-600">{{ stats.today_bookings }}</div>
+                        <div class="text-xs text-gray-500">Bugun</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-600">{{ stats.people_served_today }}</div>
+                        <div class="text-xs text-gray-500">Xizmat ko'rsatilgan</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Stats Cards - Mobile Optimized -->
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 mb-6">
+            <!-- All Bookings -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow duration-200 active:scale-95" onclick="loadBookings('all')">
+                <div class="p-3 sm:p-4">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                         </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Jami buyurtmalar</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ stats.total_bookings }}</dd>
-                            </dl>
-                        </div>
+                        <div class="text-lg font-bold text-gray-900">{{ stats.total_bookings }}</div>
+                        <div class="text-xs text-gray-500 leading-tight">Jami</div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-200" onclick="loadBookings('today')">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Today's Bookings -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow duration-200 active:scale-95" onclick="loadBookings('today')">
+                <div class="p-3 sm:p-4">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Bugungi buyurtmalar</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ stats.today_bookings }}</dd>
-                            </dl>
-                        </div>
+                        <div class="text-lg font-bold text-gray-900">{{ stats.today_bookings }}</div>
+                        <div class="text-xs text-gray-500 leading-tight">Bugun</div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-200" onclick="loadBookings('pending')">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <svg class="h-6 w-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Pending Bookings -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow duration-200 active:scale-95" onclick="loadBookings('pending')">
+                <div class="p-3 sm:p-4">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                             </svg>
                         </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Kutilayotgan</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ stats.pending_bookings }}</dd>
-                            </dl>
-                        </div>
+                        <div class="text-lg font-bold text-gray-900">{{ stats.pending_bookings }}</div>
+                        <div class="text-xs text-gray-500 leading-tight">Kutilmoqda</div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-200" onclick="loadBookings('confirmed')">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Confirmed Bookings -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow duration-200 active:scale-95" onclick="loadBookings('confirmed')">
+                <div class="p-3 sm:p-4">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Tasdiqlangan</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ stats.confirmed_bookings }}</dd>
-                            </dl>
+                        <div class="text-lg font-bold text-gray-900">{{ stats.confirmed_bookings }}</div>
+                        <div class="text-xs text-gray-500 leading-tight">Tasdiqlangan</div>
                         </div>
                     </div>
-                </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-200" onclick="loadBookings('served_today')">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <svg class="h-6 w-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Served Today -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow duration-200 active:scale-95" onclick="loadBookings('served_today')">
+                <div class="p-3 sm:p-4">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                         </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Bugun xizmat ko'rsatilgan</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ stats.people_served_today }}</dd>
-                            </dl>
-                        </div>
-                    </div>
+                        <div class="text-lg font-bold text-gray-900">{{ stats.people_served_today }}</div>
+                        <div class="text-xs text-gray-500 leading-tight">Xizmat ko'rsatilgan</div>
                 </div>
             </div>
+        </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-200" onclick="loadBookings('served_month')">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <svg class="h-6 w-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Served This Month -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow duration-200 active:scale-95" onclick="loadBookings('served_month')">
+                <div class="p-3 sm:p-4">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
+                                                </svg>
                         </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Bu oy xizmat ko'rsatilgan</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ stats.people_served_this_month }}</dd>
-                            </dl>
-                        </div>
+                        <div class="text-lg font-bold text-gray-900">{{ stats.people_served_this_month }}</div>
+                        <div class="text-xs text-gray-500 leading-tight">Bu oy</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <!-- Today's Bookings -->
-            <div class="bg-white shadow rounded-lg">
-                <div class="px-4 py-5 sm:p-6">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-                        Bugungi buyurtmalar
-                    </h3>
-                    {% if today_bookings %}
-                        <div class="space-y-3">
-                            {% for booking in today_bookings %}
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0">
-                                            <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                                <svg class="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                                </svg>
+        <!-- Bookings Section -->
+        <div id="bookings-section" class="hidden">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-4 py-3 border-b border-gray-200 sm:px-6">
+                    <div class="flex items-center justify-between">
+                        <h3 id="bookings-title" class="text-base font-medium text-gray-900 sm:text-lg">Buyurtmalar</h3>
+                        <button onclick="hideBookings()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
                                             </div>
                                         </div>
-                                        <div class="ml-3">
-                                            <p class="text-sm font-medium text-gray-900">{{ booking.client.full_name }}</p>
-                                            <p class="text-sm text-gray-500">{{ booking.time }}</p>
+                
+                <div class="p-4 sm:p-6">
+                    <!-- Loading State -->
+                    <div id="bookings-loading" class="hidden text-center py-8">
+                        <div class="inline-flex items-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span class="text-sm text-gray-600">Yuklanmoqda...</span>
                                         </div>
                                     </div>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
-                                        {% elif booking.status == 'confirmed' %}bg-green-100 text-green-800
-                                        {% elif booking.status == 'active' %}bg-blue-100 text-blue-800
-                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                        {% if booking.status == 'pending' %}Kutilmoqda
-                                        {% elif booking.status == 'confirmed' %}Tasdiqlangan
-                                        {% elif booking.status == 'active' %}Faol
-                                        {% else %}{{ booking.status }}{% endif %}
-                                    </span>
-                                </div>
-                            {% endfor %}
+                    
+                    <!-- Bookings Table -->
+                    <div id="bookings-content" class="hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6 sm:py-3">Mijoz</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6 sm:py-3">Sana</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6 sm:py-3">Vaqt</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6 sm:py-3">Holat</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookings-tbody" class="bg-white divide-y divide-gray-200">
+                                    <!-- Dynamic content will be loaded here -->
+                                </tbody>
+                            </table>
                         </div>
-                    {% else %}
-                        <div class="text-center py-6">
+                        
+                        <!-- Pagination -->
+                        <div id="bookings-pagination" class="mt-4 flex items-center justify-between">
+                            <!-- Pagination content will be loaded here -->
+                                </div>
+                        </div>
+                    
+                    <!-- Empty State -->
+                    <div id="bookings-empty" class="hidden text-center py-8">
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">Bugungi buyurtmalar yo'q</h3>
-                            <p class="mt-1 text-sm text-gray-500">Bugun uchun hech qanday buyurtma kiritilmagan.</p>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">Buyurtma topilmadi</h3>
+                        <p class="mt-1 text-sm text-gray-500">Bu kategoriyada hech qanday buyurtma yo'q.</p>
+                    </div>
                         </div>
-                    {% endif %}
                 </div>
             </div>
-
-            <!-- Upcoming Bookings -->
-            <div class="bg-white shadow rounded-lg">
-                <div class="px-4 py-5 sm:p-6">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-                        Kelgusi buyurtmalar
-                    </h3>
-                    {% if upcoming_bookings %}
-                        <div class="space-y-3">
-                            {% for booking in upcoming_bookings %}
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0">
-                                            <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
-                                                <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <div class="ml-3">
-                                            <p class="text-sm font-medium text-gray-900">{{ booking.client.full_name }}</p>
-                                            <p class="text-sm text-gray-500">{{ booking.date }} - {{ booking.time }}</p>
-                                        </div>
-                                    </div>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
-                                        {% elif booking.status == 'confirmed' %}bg-green-100 text-green-800
-                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                        {% if booking.status == 'pending' %}Kutilmoqda
-                                        {% elif booking.status == 'confirmed' %}Tasdiqlangan
-                                        {% else %}{{ booking.status }}{% endif %}
-                                    </span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="text-center py-6">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">Kelgusi buyurtmalar yo'q</h3>
-                            <p class="mt-1 text-sm text-gray-500">Hozircha kelgusi buyurtmalar mavjud emas.</p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
 
         <!-- Bookings Table Section -->
         <div id="bookings-section" class="mt-8" style="display: none;">
@@ -273,24 +242,24 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 id="bookings-title" class="text-lg leading-6 font-medium text-gray-900">
                             Buyurtmalar
-                        </h3>
+                    </h3>
                         <button onclick="hideBookings()" class="text-gray-400 hover:text-gray-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
+                                                </svg>
                         </button>
-                    </div>
+                                            </div>
                     
                     <!-- Loading indicator -->
                     <div id="bookings-loading" class="text-center py-8" style="display: none;">
                         <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                         <p class="mt-2 text-sm text-gray-500">Yuklanmoqda...</p>
-                    </div>
+                                        </div>
                     
                     <!-- Bookings table -->
                     <div id="bookings-content">
                         <!-- Table will be populated by JavaScript -->
-                    </div>
+                                        </div>
                     
                     <!-- Pagination -->
                     <div id="bookings-pagination" class="mt-4 flex items-center justify-between">
@@ -303,9 +272,16 @@
 </div>
 
 <script>
+// Mobile-First Dashboard Functions
+
+// Toggle quick actions panel
+function toggleQuickActions() {
+    const panel = document.getElementById('quickActions');
+    panel.classList.toggle('hidden');
+}
+
 let currentFilter = '';
 let currentPage = 1;
-
 
 function toggleAvailability() {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
@@ -337,6 +313,7 @@ function toggleAvailability() {
 }
 
 function loadBookings(filter) {
+    console.log('Loading bookings with filter:', filter);
     currentFilter = filter;
     currentPage = 1;
     showBookings();
@@ -348,18 +325,40 @@ function showBookings() {
     const content = document.getElementById('bookings-content');
     const pagination = document.getElementById('bookings-pagination');
     
+    // Show the bookings section
+    section.classList.remove('hidden');
     section.style.display = 'block';
+    
+    // Show loading state
+    loading.classList.remove('hidden');
     loading.style.display = 'block';
-    content.innerHTML = '';
+    
+    // Hide content and pagination
+    content.classList.add('hidden');
+    content.style.display = 'none';
     pagination.innerHTML = '';
     
+    console.log('Loading bookings with filter:', currentFilter, 'page:', currentPage);
+    
     fetch(`{% url 'users:dashboard_bookings' %}?filter=${currentFilter}&page=${currentPage}`)
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Received data:', data);
+            
+            // Hide loading
+            loading.classList.add('hidden');
             loading.style.display = 'none';
             
             if (data.error) {
                 content.innerHTML = `<div class="text-center py-6 text-red-600">${data.error}</div>`;
+                content.classList.remove('hidden');
+                content.style.display = 'block';
                 return;
             }
             
@@ -375,6 +374,8 @@ function showBookings() {
                         <p class="mt-1 text-sm text-gray-500">Bu kategoriyada hech qanday buyurtma mavjud emas.</p>
                     </div>
                 `;
+                content.classList.remove('hidden');
+                content.style.display = 'block';
                 return;
             }
             
@@ -441,6 +442,10 @@ function showBookings() {
             `;
             
             content.innerHTML = tableHTML;
+            
+            // Show the content
+            content.classList.remove('hidden');
+            content.style.display = 'block';
             
             // Add pagination if needed
             if (data.total_pages > 1) {
@@ -512,9 +517,18 @@ function showBookings() {
             }
         })
         .catch(error => {
+            console.error('Error loading bookings:', error);
+            
+            // Hide loading
+            loading.classList.add('hidden');
             loading.style.display = 'none';
-            showToast('Ma\'lumotlarni yuklashda xatolik yuz berdi', 'error');
+            
+            // Show error
             content.innerHTML = `<div class="text-center py-6 text-red-600">Xatolik yuz berdi: ${error.message}</div>`;
+            content.classList.remove('hidden');
+            content.style.display = 'block';
+            
+            showToast('Ma\'lumotlarni yuklashda xatolik yuz berdi', 'error');
         });
 }
 
@@ -524,7 +538,9 @@ function changePage(page) {
 }
 
 function hideBookings() {
-    document.getElementById('bookings-section').style.display = 'none';
+    const section = document.getElementById('bookings-section');
+    section.classList.add('hidden');
+    section.style.display = 'none';
 }
 
 function getStatusClass(status) {
