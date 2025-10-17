@@ -17,15 +17,16 @@ def booking_list_view(request):
     if request.user.is_provider():
         # Provider sees bookings for their services
         bookings = Booking.objects.filter(
-            provider__user=request.user
-        ).select_related('client', 'provider__service').order_by('-created_at')
+            provider__user=request.user,
+        ).select_related('client', 'provider__service').order_by('-date')
     else:
         # Client sees their own bookings
         bookings = Booking.objects.filter(
             client=request.user
         ).select_related('provider__user', 'provider__service').order_by('-created_at')
-    
-    return render(request, 'bookings/list.html', {'bookings': bookings})
+        
+
+    return render(request, 'bookings/list.html', {'bookings': bookings, 'today': date.today().day})
 
 
 @login_required

@@ -48,20 +48,7 @@ storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
 
-class BookingStates(StatesGroup):
-    """States for booking flow"""
-    waiting_for_service = State()
-    waiting_for_provider = State()
-    waiting_for_date = State()
-    waiting_for_time = State()
-    waiting_for_confirmation = State()
-
-
-class UserRegistrationStates(StatesGroup):
-    """States for user registration"""
-    waiting_for_name = State()
-    waiting_for_phone = State()
-    waiting_for_role = State()
+# Removed unused state classes - now using web app only
 
 
 # Helper functions for API calls
@@ -136,9 +123,8 @@ async def cmd_start(message: types.Message, state: FSMContext):
     
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="📋 Xizmatlar"), KeyboardButton(text="📅 Mening buyurtmalarim")],
-            [KeyboardButton(text="👤 Profil"), KeyboardButton(text="ℹ️ Yordam")],
-            [KeyboardButton(text="🌐 Web ilovasi")]
+            [KeyboardButton(text="ℹ️ Yordam va ma'lumot")],
+            [KeyboardButton(text="🌐 Web ilovasini ochish")]
         ],
         resize_keyboard=True,
         one_time_keyboard=False
@@ -147,261 +133,28 @@ async def cmd_start(message: types.Message, state: FSMContext):
     await message.answer(
         f"👋 Salom {message.from_user.first_name}!\n\n"
         f"Navbatni boshqarish botiga xush kelibsiz! 🚀\n\n"
-        f"Quyidagi menyudan biror variantni tanlang:",
+        f"To'liq funksionallik uchun web ilovasini ishlatishingiz mumkin.\n\n"
+        f"Quyidagi tugmalardan birini tanlang:",
         reply_markup=keyboard
     )
 
 
-@dp.message(lambda message: message.text == "📋 Xizmatlar")
-async def show_services(message: types.Message, state: FSMContext):
-    """Show available services"""
-    services_data = await make_api_request('GET', '/services/')
-    
-    if 'error' in services_data:
-        await message.answer("❌ Kechirasiz, hozircha xizmatlarni olishga qiynalmoqda. Keyinroq urinib ko'ring.")
-        return
-    
-    services = services_data.get('results', [])
-    
-    if not services:
-        await message.answer("📋 Hozircha hech qanday xizmat mavjud emas.")
-        return
-    
-    keyboard = []
-    for service in services:
-        keyboard.append([InlineKeyboardButton(
-            text=f"{service['name']} ({service['duration_minutes']} min)",
-            callback_data=f"service_{service['id']}"
-        )])
-    
-    reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-    
-    await message.answer(
-        "📋 Mavjud xizmatlar:\n\n" + 
-        "\n".join([f"• {s['name']} - {s['duration_minutes']} daqiqa" for s in services]),
-        reply_markup=reply_markup
-    )
+# Removed old service handlers - now using web app only
 
 
-@dp.callback_query(lambda c: c.data.startswith("service_"))
-async def process_service_selection(callback_query: types.CallbackQuery, state: FSMContext):
-    """Process service selection"""
-    service_id = int(callback_query.data.split("_")[1])
-    
-    await state.update_data(service_id=service_id)
-    await state.set_state(BookingStates.waiting_for_provider)
-    
-    # Get providers for this service
-    providers_data = await make_api_request('GET', f'/providers/?service_id={service_id}')
-    
-    if 'error' in providers_data:
-        await callback_query.message.edit_text("❌ Kechirasiz, xizmat ko'rsatuvchilarni olishga qiynalmoqda. Qayta urinib ko'ring.")
-        return
-    
-    providers = providers_data.get('results', [])
-    
-    if not providers:
-        await callback_query.message.edit_text("❌ Bu xizmat uchun hech qanday ko'rsatuvchi mavjud emas.")
-        return
-    
-    keyboard = []
-    for provider in providers:
-        keyboard.append([InlineKeyboardButton(
-            text=f"{provider['user_name']} - {provider['service_name']}",
-            callback_data=f"provider_{provider['id']}"
-        )])
-    
-    reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-    
-    await callback_query.message.edit_text(
-        f"👨‍💼 Xizmat ko'rsatuvchini tanlang:\n\n" +
-        "\n".join([f"• {p['user_name']} - {p['location']}" for p in providers]),
-        reply_markup=reply_markup
-    )
+# Removed old callback handlers - now using web app only
 
 
-@dp.callback_query(lambda c: c.data.startswith("provider_"))
-async def process_provider_selection(callback_query: types.CallbackQuery, state: FSMContext):
-    """Process provider selection"""
-    provider_id = int(callback_query.data.split("_")[1])
-    
-    await state.update_data(provider_id=provider_id)
-    await state.set_state(BookingStates.waiting_for_date)
-    
-    # Get provider details
-    provider_data = await make_api_request('GET', f'/providers/{provider_id}/')
-    
-    if 'error' in provider_data:
-        await callback_query.message.edit_text("❌ Xizmat ko'rsatuvchi topilmadi.")
-        return
-    
-    working_days = ", ".join([day.capitalize() for day in provider_data['working_days']])
-    
-    keyboard = [
-        [InlineKeyboardButton(text="Bugun", callback_data="date_today")],
-        [InlineKeyboardButton(text="Ertaga", callback_data="date_tomorrow")],
-        [InlineKeyboardButton(text="Kundan keyingi kun", callback_data="date_day_after")]
-    ]
-    
-    reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-    
-    await callback_query.message.edit_text(
-        f"📅 Buyurtmangiz uchun sanani tanlang:\n\n"
-        f"Ko'rsatuvchi: {provider_data['user_name']}\n"
-        f"Xizmat: {provider_data['service_name']}\n"
-        f"Ish kunlari: {working_days}\n"
-        f"Vaqt: {provider_data['start_time']} - {provider_data['end_time']}",
-        reply_markup=reply_markup
-    )
-
-
-@dp.callback_query(lambda c: c.data.startswith("date_"))
-async def process_date_selection(callback_query: types.CallbackQuery, state: FSMContext):
-    """Process date selection"""
-    date_option = callback_query.data.split("_")[1]
-    
-    today = date.today()
-    if date_option == "today":
-        selected_date = today
-    elif date_option == "tomorrow":
-        selected_date = today + timedelta(days=1)
-    elif date_option == "day_after":
-        selected_date = today + timedelta(days=2)
-    else:
-        await callback_query.message.edit_text("❌ Noto'g'ri sana tanlovi.")
-        return
-    
-    data = await state.get_data()
-    provider_id = data.get('provider_id')
-    
-    await state.update_data(date=selected_date.isoformat())
-    await state.set_state(BookingStates.waiting_for_time)
-    
-    # Get available time slots
-    slots_data = await make_api_request(
-        'GET', 
-        f'/providers/{provider_id}/slots/?date={selected_date.isoformat()}'
-    )
-    
-    if 'error' in slots_data:
-        await callback_query.message.edit_text("❌ Mavjud vaqt bo'shliqlarini olishga qiynalmoqda.")
-        return
-    
-    slots = slots_data if isinstance(slots_data, list) else []
-    
-    if not slots:
-        await callback_query.message.edit_text("❌ Bu sana uchun hech qanday bo'sh vaqt yo'q.")
-        return
-    
-    keyboard = []
-    for slot in slots[:10]:  # Limit to 10 slots
-        time_str = slot['time']
-        keyboard.append([InlineKeyboardButton(
-            text=f"🕐 {time_str}",
-            callback_data=f"time_{time_str}"
-        )])
-    
-    reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-    
-    await callback_query.message.edit_text(
-        f"🕐 {selected_date} uchun mavjud vaqt bo'shliqlari:\n\n"
-        f"Vaqt bo'shligini tanlang:",
-        reply_markup=reply_markup
-    )
-
-
-@dp.callback_query(lambda c: c.data.startswith("time_"))
-async def process_time_selection(callback_query: types.CallbackQuery, state: FSMContext):
-    """Process time selection"""
-    time_str = callback_query.data.split("_", 1)[1]
-    
-    await state.update_data(time=time_str)
-    await state.set_state(BookingStates.waiting_for_confirmation)
-    
-    data = await state.get_data()
-    
-    keyboard = [
-        [InlineKeyboardButton(text="✅ Buyurtmani tasdiqlash", callback_data="confirm_booking")],
-        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_booking")]
-    ]
-    
-    reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-    
-    await callback_query.message.edit_text(
-        f"📋 Iltimos, buyurtmangizni tasdiqlang:\n\n"
-        f"Sana: {data['date']}\n"
-        f"Vaqt: {time_str}\n\n"
-        f"Bu buyurtmani tasdiqlashni xohlaysizmi?",
-        reply_markup=reply_markup
-    )
-
-
-@dp.callback_query(lambda c: c.data == "confirm_booking")
-async def confirm_booking(callback_query: types.CallbackQuery, state: FSMContext):
-    """Confirm booking"""
-    data = await state.get_data()
-    
-    # Create booking via API
-    booking_data = {
-        "provider_id": data['provider_id'],
-        "date": data['date'],
-        "time": data['time'],
-        "notes": "Booked via Telegram bot"
-    }
-    
-    # For MVP, we'll simulate a successful booking
-    # In production, you'd implement proper authentication
-    await callback_query.message.edit_text(
-        f"✅ Buyurtma tasdiqlandi!\n\n"
-        f"Sana: {data['date']}\n"
-        f"Vaqt: {data['time']}\n\n"
-        f"Uchrashuvdan oldin eslatma olasiz.\n\n"
-        f"Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."
-    )
-    
-    await state.clear()
-
-
-@dp.callback_query(lambda c: c.data == "cancel_booking")
-async def cancel_booking(callback_query: types.CallbackQuery, state: FSMContext):
-    """Cancel booking process"""
-    await callback_query.message.edit_text(
-        "❌ Buyurtma bekor qilindi.\n\nAsosiy menyuga qaytish uchun /start buyrug'ini ishlating."
-    )
-    await state.clear()
-
-
-@dp.message(lambda message: message.text == "📅 Mening buyurtmalarim")
-async def show_my_bookings(message: types.Message):
-    """Show user's bookings"""
-    # For MVP, show a placeholder
-    await message.answer(
-        "📅 Sizning buyurtmalaringiz:\n\n"
-        "Hech qanday buyurtma topilmadi.\n\n"
-        "Yangi buyurtma berish uchun 'Xizmatlar'ni ishlating!"
-    )
-
-
-@dp.message(lambda message: message.text == "👤 Profil")
-async def show_profile(message: types.Message):
-    """Show user profile"""
-    await message.answer(
-        f"👤 Sizning profilingiz:\n\n"
-        f"Ism: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
-        f"Foydalanuvchi nomi: @{message.from_user.username or 'Belgilanmagan'}\n"
-        f"Telegram ID: {message.from_user.id}\n"
-        f"Rol: Mijoz\n\n"
-        f"Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."
-    )
+# Removed all old booking flow handlers - now using web app only
 
 
 
 
-@dp.message(lambda message: message.text == "🌐 Web ilovasi")
+@dp.message(lambda message: message.text == "🌐 Web ilovasini ochish")
 async def show_web_app(message: types.Message):
     """Open web application"""
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🌐 Web ilovasini ochish", url=f"https://d9a7b9b528c1.ngrok-free.app/users/telegram-login/?telegram_id={message.from_user.id}")]
+        [InlineKeyboardButton(text="🌐 Web ilovasini ochish", url=f"http://localhost:8001/users/telegram-login/?telegram_id={message.from_user.id}")]
     ])
     
     await message.answer(
@@ -412,21 +165,26 @@ async def show_web_app(message: types.Message):
     )
 
 
-@dp.message(lambda message: message.text == "ℹ️ Yordam")
+@dp.message(lambda message: message.text == "ℹ️ Yordam va ma'lumot")
 async def show_help(message: types.Message):
-    """Show help information"""
+    """Show help and system information"""
     await message.answer(
-        "ℹ️ Yordam va ma'lumot:\n\n"
-        "🤖 Bu bot sizga xizmat ko'rsatuvchilar bilan xizmatlarni buyurtma qilishga yordam beradi.\n\n"
+        "ℹ️ **Yordam va tizim ma'lumotlari**\n\n"
+        "🤖 **Bot haqida:**\n"
+        "Bu bot navbatni boshqarish tizimi uchun yaratilgan. "
+        "To'liq funksionallik uchun web ilovasini ishlatishingiz kerak.\n\n"
         "📋 **Mavjud buyruqlar:**\n"
         "• /start - Asosiy menyu\n"
-        "• Xizmatlar - Mavjud xizmatlarni ko'rish\n"
-        "• Mening buyurtmalarim - Buyurtmalaringizni ko'rish\n"
-        "• Profil - Profilingizni ko'rish\n"
-        "• Yordam - Bu yordamni ko'rsatish\n\n"
+        "• ℹ️ Yordam va ma'lumot - Bu yordamni ko'rsatish\n"
+        "• 🌐 Web ilovasini ochish - Web ilovasini ochish\n\n"
         "🌐 **Web ilovasi:**\n"
-        "To'liq funksionallik uchun 'Web ilovasi' tugmasini ishlating\n"
-        "URL: https://d9a7b9b528c1.ngrok-free.app\n\n"
+        "To'liq funksionallik uchun 'Web ilovasini ochish' tugmasini ishlating\n"
+        "URL: http://localhost:8001\n\n"
+        "🔧 **Tizim ma'lumotlari:**\n"
+        "• Bot versiyasi: 1.0.0\n"
+        "• Web ilova: Django 5.2.1\n"
+        "• Ma'lumotlar bazasi: SQLite\n"
+        "• Server: Localhost:8001\n\n"
         "📞 **Qo'llab-quvvatlash:**\n"
         "Agar yordamga muhtoj bo'lsangiz, administratorga murojaat qiling.\n\n"
         "Asosiy menyuga qaytish uchun /start buyrug'ini ishlating."
@@ -438,7 +196,8 @@ async def handle_unknown_message(message: types.Message):
     """Handle unknown messages"""
     await message.answer(
         "❓ Men bu buyruqni tushunmayman.\n\n"
-        "Asosiy menyuni ko'rish uchun /start yoki yordam uchun /help buyrug'ini ishlating."
+        "Asosiy menyuni ko'rish uchun /start buyrug'ini ishlating.\n\n"
+        "Yordam uchun 'ℹ️ Yordam va ma'lumot' tugmasini bosing."
     )
 
 

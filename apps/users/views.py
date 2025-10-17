@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q, Count
-from datetime import date, timedelta
+from django.core.paginator import Paginator
+from datetime import date, timedelta, datetime
 from .models import User
 from apps.services.models import Provider, Service
 from apps.bookings.models import Booking, Notification
@@ -175,6 +176,10 @@ def dashboard_view(request):
         status__in=['pending', 'confirmed']
     ).order_by('date', 'time')[:10]
     
+    # Get current month start date
+    from datetime import datetime
+    current_month_start = datetime.now().replace(day=1).date()
+    
     # Statistics
     stats = {
         'total_bookings': Booking.objects.filter(provider=provider).count(),
@@ -186,6 +191,17 @@ def dashboard_view(request):
         'confirmed_bookings': Booking.objects.filter(
             provider=provider,
             status='confirmed'
+        ).count(),
+        # New statistics for people served
+        'people_served_today': Booking.objects.filter(
+            provider=provider,
+            date=today,
+            status='completed'
+        ).count(),
+        'people_served_this_month': Booking.objects.filter(
+            provider=provider,
+            date__gte=current_month_start,
+            status='completed'
         ).count(),
     }
     
@@ -290,3 +306,73 @@ def setup_provider_view(request):
     services = Service.objects.filter(is_active=True)
     days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     return render(request, 'users/setup_provider.html', {'services': services, 'days': days})
+
+
+@login_required
+def dashboard_bookings_view(request):
+    """Get filtered bookings for dashboard statistics"""
+    if not request.user.is_provider():
+        return JsonResponse({'error': 'Access denied'}, status=403)
+    
+    try:
+        provider = request.user.provider_profile
+    except Provider.DoesNotExist:
+        return JsonResponse({'error': 'Provider not found'}, status=404)
+    
+    # Get filter type from request
+    filter_type = request.GET.get('filter', 'all')
+    page = request.GET.get('page', 1)
+    
+    # Base queryset
+    bookings = Booking.objects.filter(provider=provider).order_by('-created_at')
+    
+    # Apply filters based on type
+    today = timezone.now().date()
+    current_month_start = datetime.now().replace(day=1).date()
+    
+    if filter_type == 'today':
+        bookings = bookings.filter(date=today)
+        title = "Bugungi buyurtmalar"
+    elif filter_type == 'pending':
+        bookings = bookings.filter(status='pending')
+        title = "Kutilayotgan buyurtmalar"
+    elif filter_type == 'confirmed':
+        bookings = bookings.filter(status='confirmed')
+        title = "Tasdiqlangan buyurtmalar"
+    elif filter_type == 'served_today':
+        bookings = bookings.filter(date=today, status='completed')
+        title = "Bugun xizmat ko'rsatilgan"
+    elif filter_type == 'served_month':
+        bookings = bookings.filter(date__gte=current_month_start, status='completed')
+        title = "Bu oy xizmat ko'rsatilgan"
+    else:
+        title = "Barcha buyurtmalar"
+    
+    # Pagination
+    paginator = Paginator(bookings, 10)
+    page_obj = paginator.get_page(page)
+    
+    # Prepare data for JSON response
+    bookings_data = []
+    for booking in page_obj:
+        bookings_data.append({
+            'id': booking.id,
+            'client_name': booking.client.full_name,
+            'client_phone': booking.client.phone,
+            'date': booking.date.strftime('%Y-%m-%d'),
+            'time': booking.time.strftime('%H:%M'),
+            'status': booking.status,
+            'status_display': booking.get_status_display(),
+            'notes': booking.notes,
+            'created_at': booking.created_at.strftime('%Y-%m-%d %H:%M'),
+        })
+    
+    return JsonResponse({
+        'title': title,
+        'bookings': bookings_data,
+        'has_next': page_obj.has_next(),
+        'has_previous': page_obj.has_previous(),
+        'current_page': page_obj.number,
+        'total_pages': paginator.num_pages,
+        'total_count': paginator.count,
+    })

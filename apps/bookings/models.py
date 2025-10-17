@@ -80,7 +80,7 @@ class Booking(models.Model):
         return end_datetime.time()
     
     def save(self, *args, **kwargs):
-        """Override save to validate booking"""
+        """Override save to validate booking and schedule notifications"""
         # Validate that client is not a provider
         if self.client.is_provider():
             raise ValueError("Providers cannot book services")
@@ -96,7 +96,25 @@ class Booking(models.Model):
         if booking_datetime < timezone.now():
             raise ValueError("Cannot book in the past")
         
+        # Check if this is a new booking
+        is_new = self.pk is None
+        
         super().save(*args, **kwargs)
+        
+        # Schedule notifications after saving
+        try:
+            from .notification_service import NotificationService
+            if is_new:
+                # Schedule notifications for new booking
+                NotificationService.schedule_booking_notifications(self)
+            else:
+                # Update notifications for existing booking
+                NotificationService.update_booking_notifications(self)
+        except Exception as e:
+            # Log error but don't fail the save
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to schedule notifications for booking {self.id}: {e}")
 
 
 class Notification(models.Model):
@@ -108,6 +126,14 @@ class Notification(models.Model):
         ('booking_cancelled', 'Booking Cancelled'),
         ('booking_updated', 'Booking Updated'),
         ('provider_message', 'Provider Message'),
+        # New notification types for queue management
+        ('queue_reminder_72h', 'Queue Reminder 72h'),
+        ('queue_reminder_36h', 'Queue Reminder 36h'),
+        ('queue_reminder_24h', 'Queue Reminder 24h'),
+        ('queue_reminder_3h', 'Queue Reminder 3h'),
+        ('queue_reminder_1h', 'Queue Reminder 1h'),
+        ('provider_next_queue', 'Provider Next Queue'),
+        ('provider_today_queues', 'Provider Today Queues'),
     ]
     
     user = models.ForeignKey(
@@ -141,6 +167,32 @@ class Notification(models.Model):
         help_text="Whether notification has been read"
     )
     sent_at = models.DateTimeField(default=timezone.now)
+    scheduled_for = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When notification should be sent"
+    )
+    is_sent = models.BooleanField(
+        default=False,
+        help_text="Whether notification has been sent"
+    )
+    sent_via = models.CharField(
+        max_length=20,
+        choices=[
+            ('telegram', 'Telegram'),
+            ('email', 'Email'),
+            ('sms', 'SMS'),
+            ('web', 'Web'),
+        ],
+        default='telegram',
+        help_text="How notification was sent"
+    )
+    telegram_message_id = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Telegram message ID for tracking"
+    )
     
     class Meta:
         db_table = 'notifications'

@@ -281,6 +281,10 @@ def dashboard_stats(request):
     today = timezone.now().date()
     
     if user.is_provider():
+        # Get current month start date
+        from datetime import datetime
+        current_month_start = datetime.now().replace(day=1).date()
+        
         # Provider stats
         total_bookings = Booking.objects.filter(provider__user=user).count()
         today_bookings = Booking.objects.filter(
@@ -292,11 +296,23 @@ def dashboard_stats(request):
             provider__user=user,
             status='pending'
         ).count()
+        people_served_today = Booking.objects.filter(
+            provider__user=user,
+            date=today,
+            status='completed'
+        ).count()
+        people_served_this_month = Booking.objects.filter(
+            provider__user=user,
+            date__gte=current_month_start,
+            status='completed'
+        ).count()
         
         stats = {
             'total_bookings': total_bookings,
             'today_bookings': today_bookings,
             'pending_bookings': pending_bookings,
+            'people_served_today': people_served_today,
+            'people_served_this_month': people_served_this_month,
             'role': 'provider'
         }
     else:

@@ -51,8 +51,8 @@
             <div class="space-y-4">
                 {% for booking in bookings %}
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="p-4 sm:p-6">
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="p-4 sm:p-6 {% if booking.date.day == today %}bg-red-100{% endif %}" >
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between" >
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-3">
                                         <div class="flex-shrink-0">
@@ -205,10 +205,10 @@
 
 <script>
 function confirmBooking(bookingId) {
-    if (confirm('Bu buyurtmani tasdiqlashni xohlaysizmi?')) {
+    showConfirm('Bu buyurtmani tasdiqlashni xohlaysizmi?', () => {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
         if (!csrfToken) {
-            alert('CSRF token topilmadi');
+            showToast('CSRF token topilmadi', 'error');
             return;
         }
         
@@ -222,23 +222,24 @@ function confirmBooking(bookingId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                showToast('Buyurtma muvaffaqiyatli tasdiqlandi', 'success');
+                setTimeout(() => location.reload(), 1000);
             } else {
-                alert('Xatolik: ' + data.error);
+                showToast('Xatolik: ' + data.error, 'error');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Xatolik yuz berdi');
+            showToast('Xatolik yuz berdi', 'error');
         });
-    }
+    });
 }
 
 function cancelBooking(bookingId) {
-    if (confirm('Bu buyurtmani bekor qilishni xohlaysizmi?')) {
+    showConfirm('Bu buyurtmani bekor qilishni xohlaysizmi?', () => {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
         if (!csrfToken) {
-            alert('CSRF token topilmadi');
+            showToast('CSRF token topilmadi', 'error');
             return;
         }
         
@@ -252,16 +253,17 @@ function cancelBooking(bookingId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                showToast('Buyurtma bekor qilindi', 'success');
+                setTimeout(() => location.reload(), 1000);
             } else {
-                alert('Xatolik: ' + data.error);
+                showToast('Xatolik: ' + data.error, 'error');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Xatolik yuz berdi');
+            showToast('Xatolik yuz berdi', 'error');
         });
-    }
+    });
 }
 
 // Confirmation Modal Functions
@@ -319,7 +321,7 @@ function confirmBooking(bookingId) {
         () => {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
             if (!csrfToken) {
-                alert('CSRF token topilmadi');
+                showToast('CSRF token topilmadi', 'error');
                 return;
             }
             
@@ -333,14 +335,15 @@ function confirmBooking(bookingId) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    location.reload();
+                    showToast('Buyurtma muvaffaqiyatli tasdiqlandi', 'success');
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Xatolik: ' + data.error);
+                    showToast('Xatolik: ' + data.error, 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Xatolik yuz berdi');
+                showToast('Xatolik yuz berdi', 'error');
             });
         }
     );
@@ -353,7 +356,7 @@ function cancelBooking(bookingId) {
         () => {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
             if (!csrfToken) {
-                alert('CSRF token topilmadi');
+                showToast('CSRF token topilmadi', 'error');
                 return;
             }
             
@@ -367,14 +370,15 @@ function cancelBooking(bookingId) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    location.reload();
+                    showToast('Buyurtma bekor qilindi', 'success');
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Xatolik: ' + data.error);
+                    showToast('Xatolik: ' + data.error, 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Xatolik yuz berdi');
+                showToast('Xatolik yuz berdi', 'error');
             });
         }
     );
