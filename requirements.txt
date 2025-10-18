@@ -1,10 +1,14 @@
-# Django-based Queue Management Bot
-django>=5.0
-djangorestframework>=3.15
-django-cors-headers>=4.9
-python-dotenv>=1.1.1
-apscheduler>=3.11.0
-aiogram>=3.22.0
-
-# Optional async support
-asgiref>=3.8.1
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+python-telegram-bot==20.7
+celery==5.3.4
+redis==5.0.1
+psycopg2-binary==2.9.9
+python-decouple==3.8
+gunicorn==21.2.0
+whitenoise==6.6.0
+Pillow==10.1.0
+requests==2.31.0
+python-dotenv==1.0.0
+django-environ==0.11.2

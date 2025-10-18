@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buyurtma berish - {{ provider.user.full_name }} - Navbatni Boshqarish Boti{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-6">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="md:flex md:items-center md:justify-between">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Buyurtma berish
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    {{ provider.user.full_name }} - {{ provider.service.name }}
+                </p>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <a href="{% url 'services:provider_detail' provider.id %}" 
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    Orqaga
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <form method="post" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        <!-- Provider Information -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-sm font-medium text-gray-900 mb-3">Xizmat ko'rsatuvchi ma'lumotlari</h3>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Xizmat turi</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ provider.service.name }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Davomiyligi</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ provider.service.duration_minutes }} daqiqa</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Manzil</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ provider.location }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Ish vaqti</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">
+                                        {{ provider.start_time|date:"H:i" }} - {{ provider.end_time|date:"H:i" }}
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date Selection -->
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700">
+                                Sana tanlang
+                            </label>
+                            <select id="date" name="date" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <option value="">Sana tanlang</option>
+                                {% for day in next_week %}
+                                    <option value="{{ day|date:'Y-m-d' }}">
+                                        {{ day|date:'d.m.Y' }} - 
+                                        {% if day.weekday == 0 %}Dushanba
+                                        {% elif day.weekday == 1 %}Seshanba
+                                        {% elif day.weekday == 2 %}Chorshanba
+                                        {% elif day.weekday == 3 %}Payshanba
+                                        {% elif day.weekday == 4 %}Juma
+                                        {% elif day.weekday == 5 %}Shanba
+                                        {% elif day.weekday == 6 %}Yakshanba
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Time Selection -->
+                        <div>
+                            <label for="time" class="block text-sm font-medium text-gray-700">
+                                Vaqt tanlang
+                            </label>
+                            <select id="time" name="time" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <option value="">Avval sana tanlang</option>
+                            </select>
+                            <p class="mt-2 text-sm text-gray-500">
+                                Mavjud vaqtlar avtomatik ravishda yuklanadi
+                            </p>
+                        </div>
+
+                        <!-- Notes -->
+                        <div>
+                            <label for="notes" class="block text-sm font-medium text-gray-700">
+                                Qo'shimcha ma'lumot (ixtiyoriy)
+                            </label>
+                            <textarea id="notes" name="notes" rows="3"
+                                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                      placeholder="Qo'shimcha xabarlar yoki talablar..."></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-end space-x-3">
+                            <a href="{% url 'services:provider_detail' provider.id %}" 
+                               class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                Bekor qilish
+                            </a>
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Buyurtma berish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load available time slots when date is selected
+document.getElementById('date').addEventListener('change', function() {
+    const date = this.value;
+    const timeSelect = document.getElementById('time');
+    
+    if (date) {
+        // Show loading
+        timeSelect.innerHTML = '<option value="">Yuklanmoqda...</option>';
+        
+        // Fetch available slots
+        fetch(`{% url 'services:available_slots' provider.id %}?date=${date}`)
+            .then(response => response.json())
+            .then(slots => {
+                timeSelect.innerHTML = '<option value="">Vaqt tanlang</option>';
+                slots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot.time;
+                    option.textContent = slot.time;
+                    timeSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                timeSelect.innerHTML = '<option value="">Xatolik yuz berdi</option>';
+                console.error('Error:', error);
+            });
+    } else {
+        timeSelect.innerHTML = '<option value="">Avval sana tanlang</option>';
+    }
+});
+</script>
+{% endblock %}

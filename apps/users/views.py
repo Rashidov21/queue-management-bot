@@ -376,3 +376,93 @@ def dashboard_bookings_view(request):
         'total_pages': paginator.num_pages,
         'total_count': paginator.count,
     })
+
+
+@login_required
+def profile_edit_view(request):
+    """Edit user profile view"""
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        user.phone = request.POST.get('phone', user.phone)
+        user.telegram_username = request.POST.get('telegram_username', user.telegram_username)
+        user.save()
+        
+        messages.success(request, 'Profil muvaffaqiyatli yangilandi')
+        return redirect('users:profile')
+    
+    return render(request, 'users/profile_edit.html')
+
+
+@login_required
+def provider_stats_view(request):
+    """Provider statistics view"""
+    if not request.user.is_provider():
+        messages.error(request, 'Bu sahifaga kirish huquqingiz yo\'q')
+        return redirect('home')
+    
+    try:
+        provider = request.user.provider_profile
+    except Provider.DoesNotExist:
+        messages.info(request, 'Xizmat ko\'rsatuvchi profilingizni to\'ldiring')
+        return redirect('users:setup_provider')
+    
+    # Get statistics for the last 30 days
+    from datetime import timedelta
+    thirty_days_ago = timezone.now().date() - timedelta(days=30)
+    
+    stats = {
+        'total_bookings_30_days': Booking.objects.filter(
+            provider=provider,
+            created_at__gte=thirty_days_ago
+        ).count(),
+        'completed_bookings_30_days': Booking.objects.filter(
+            provider=provider,
+            created_at__gte=thirty_days_ago,
+            status='completed'
+        ).count(),
+        'pending_bookings': Booking.objects.filter(
+            provider=provider,
+            status='pending'
+        ).count(),
+        'average_rating': 4.5,  # Placeholder for future rating system
+    }
+    
+    return render(request, 'users/provider_stats.html', {
+        'provider': provider,
+        'stats': stats
+    })
+
+
+@login_required
+def notifications_view(request):
+    """User notifications view"""
+    notifications = Notification.objects.filter(
+        user=request.user
+    ).order_by('-sent_at')[:50]
+    
+    # Mark notifications as read when viewed
+    unread_notifications = notifications.filter(is_read=False)
+    unread_notifications.update(is_read=True)
+    
+    return render(request, 'users/notifications.html', {
+        'notifications': notifications
+    })
+
+
+@login_required
+def user_settings_view(request):
+    """User settings view"""
+    if request.method == 'POST':
+        # Handle settings updates
+        user = request.user
+        user.phone = request.POST.get('phone', user.phone)
+        user.telegram_username = request.POST.get('telegram_username', user.telegram_username)
+        user.save()
+        
+        messages.success(request, 'Sozlamalar muvaffaqiyatli yangilandi')
+        return redirect('users:settings')
+    
+    return render(request, 'users/settings.html')

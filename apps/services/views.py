@@ -62,3 +62,60 @@ def available_slots_view(request, provider_id):
     slots = [{'time': slot.strftime('%H:%M'), 'available': True} for slot in available_slots]
     
     return JsonResponse(slots, safe=False)
+
+
+def provider_list_view(request):
+    """List all providers"""
+    service_id = request.GET.get('service_id')
+    
+    if service_id:
+        providers = Provider.objects.filter(
+            service_id=service_id,
+            is_accepting=True
+        ).select_related('user', 'service')
+    else:
+        providers = Provider.objects.filter(
+            is_accepting=True
+        ).select_related('user', 'service')
+    
+    return render(request, 'services/provider_list.html', {
+        'providers': providers,
+        'service_id': service_id
+    })
+
+
+@login_required
+def provider_booking_view(request, provider_id):
+    """Booking form for a specific provider"""
+    provider = get_object_or_404(Provider, id=provider_id)
+    
+    if request.method == 'POST':
+        # Handle booking creation
+        booking_date = request.POST.get('date')
+        booking_time = request.POST.get('time')
+        notes = request.POST.get('notes', '')
+        
+        try:
+            from apps.bookings.models import Booking
+            booking = Booking.objects.create(
+                client=request.user,
+                provider=provider,
+                date=date.fromisoformat(booking_date),
+                time=time.fromisoformat(booking_time),
+                notes=notes,
+                status='pending'
+            )
+            
+            messages.success(request, 'Buyurtma muvaffaqiyatli yaratildi!')
+            return redirect('bookings:success', booking_id=booking.id)
+        except Exception as e:
+            messages.error(request, f'Xatolik yuz berdi: {str(e)}')
+    
+    # Get next 7 days for calendar
+    today = date.today()
+    next_week = [today + timedelta(days=i) for i in range(7)]
+    
+    return render(request, 'services/provider_booking.html', {
+        'provider': provider,
+        'next_week': next_week
+    })

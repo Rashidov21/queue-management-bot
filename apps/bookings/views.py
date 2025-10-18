@@ -182,3 +182,134 @@ def booking_detail_view(request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id, client=request.user)
     
     return render(request, 'bookings/detail.html', {'booking': booking})
+
+
+@login_required
+@require_POST
+@csrf_exempt
+def booking_complete_view(request, booking_id):
+    """Complete a booking (for providers)"""
+    if not request.user.is_provider():
+        return JsonResponse({'success': False, 'error': 'Unauthorized'})
+    
+    try:
+        booking = Booking.objects.get(id=booking_id, provider__user=request.user)
+        
+        if booking.status not in ['confirmed', 'active']:
+            return JsonResponse({'success': False, 'error': 'Booking cannot be completed'})
+        
+        booking.status = 'completed'
+        booking.save()
+        
+        # Create notification for client
+        Notification.objects.create(
+            user=booking.client,
+            booking=booking,
+            type='booking_completed',
+            title='Xizmat yakunlandi',
+            message=f'Xizmat muvaffaqiyatli yakunlandi. Rahmat!'
+        )
+        
+        return JsonResponse({'success': True})
+        
+    except Booking.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Booking not found'})
+
+
+@login_required
+def booking_reschedule_view(request, booking_id):
+    """Reschedule a booking"""
+    if request.user.is_provider():
+        booking = get_object_or_404(Booking, id=booking_id, provider__user=request.user)
+    else:
+        booking = get_object_or_404(Booking, id=booking_id, client=request.user)
+    
+    if request.method == 'POST':
+        new_date = request.POST.get('date')
+        new_time = request.POST.get('time')
+        reason = request.POST.get('reason', '')
+        
+        try:
+            booking.date = date.fromisoformat(new_date)
+            booking.time = time.fromisoformat(new_time)
+            booking.save()
+            
+            # Create notification
+            Notification.objects.create(
+                user=booking.client if booking.provider.user == request.user else booking.provider.user,
+                booking=booking,
+                type='booking_updated',
+                title='Buyurtma qayta belgilandi',
+                message=f'Buyurtma yangi vaqtga ko\'chirildi: {new_date} {new_time}'
+            )
+            
+            messages.success(request, 'Buyurtma muvaffaqiyatli qayta belgilandi')
+            return redirect('bookings:detail', booking_id=booking.id)
+        except Exception as e:
+            messages.error(request, f'Xatolik yuz berdi: {str(e)}')
+    
+    return render(request, 'bookings/reschedule.html', {'booking': booking})
+
+
+@login_required
+def booking_calendar_view(request):
+    """Booking calendar view"""
+    if request.user.is_provider():
+        bookings = Booking.objects.filter(
+            provider__user=request.user
+        ).select_related('client', 'provider__service')
+    else:
+        bookings = Booking.objects.filter(
+            client=request.user
+        ).select_related('provider__user', 'provider__service')
+    
+    return render(request, 'bookings/calendar.html', {'bookings': bookings})
+
+
+@login_required
+def booking_export_view(request):
+    """Export bookings to CSV"""
+    if request.user.is_provider():
+        bookings = Booking.objects.filter(
+            provider__user=request.user
+        ).select_related('client', 'provider__service')
+    else:
+        bookings = Booking.objects.filter(
+            client=request.user
+        ).select_related('provider__user', 'provider__service')
+    
+    # Create CSV response
+    import csv
+    from django.http import HttpResponse
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="bookings.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Client', 'Provider', 'Service', 'Date', 'Time', 'Status', 'Notes'])
+    
+    for booking in bookings:
+        if request.user.is_provider():
+            writer.writerow([
+                booking.id,
+                booking.client.full_name,
+                booking.provider.user.full_name,
+                booking.provider.service.name,
+                booking.date,
+                booking.time,
+                booking.get_status_display(),
+                booking.notes
+            ])
+        else:
+            writer.writerow([
+                booking.id,
+                booking.client.full_name,
+                booking.provider.user.full_name,
+                booking.provider.service.name,
+                booking.date,
+                booking.time,
+                booking.get_status_display(),
+                booking.notes
+            ])
+    
+    return response
