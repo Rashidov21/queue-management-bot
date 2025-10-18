@@ -12,7 +12,7 @@ import sys
 from django.core.wsgi import get_wsgi_application
 
 # Add the project directory to the Python path
-path = '/home/yourusername/queue-management-bot'
+path = '/home/geekscomputer232323/queue-management-bot'
 if path not in sys.path:
     sys.path.append(path)
 
