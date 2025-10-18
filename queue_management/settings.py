@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'apps.services',
     'apps.bookings',
     'apps.api',
+    'apps.bot',
 ]
 
 MIDDLEWARE = [
