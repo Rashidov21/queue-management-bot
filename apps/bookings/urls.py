@@ -21,3 +21,4 @@ urlpatterns = [
     path('export/', views.booking_export_view, name='export'),
 ]
 
+

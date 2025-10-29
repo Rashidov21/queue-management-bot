@@ -27,3 +27,4 @@ urlpatterns = [
     path('settings/', views.user_settings_view, name='settings'),
 ]
 
+
