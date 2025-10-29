@@ -26,3 +26,4 @@ urlpatterns = [
     path('notifications/', views.notifications_view, name='notifications'),
     path('settings/', views.user_settings_view, name='settings'),
 ]
+

@@ -20,3 +20,4 @@ urlpatterns = [
     path('calendar/', views.booking_calendar_view, name='calendar'),
     path('export/', views.booking_export_view, name='export'),
 ]
+

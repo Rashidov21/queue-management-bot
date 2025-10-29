@@ -14,3 +14,4 @@ urlpatterns = [
     path('providers/<int:provider_id>/slots/', views.available_slots_view, name='available_slots'),
     path('providers/<int:provider_id>/book/', views.provider_booking_view, name='provider_booking'),
 ]
+
